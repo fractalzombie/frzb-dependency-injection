@@ -1,0 +1,64 @@
+{
+  "name": "frzb/dependency-injection",
+  "type": "library",
+  "description": "Allows you to standardize and centralize the way objects are constructed in your application by php attributes",
+  "keywords": [
+    "library",
+    "symfony",
+    "dependency",
+    "injection",
+    "dependency-injection",
+    "frzb"
+  ],
+  "homepage": "https://github.com/fractalzombie/frzb-dependency-injection",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mykhailo Shtanko",
+      "email": "fractalzombie@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "psr/container": "^1.1.1|^2.0",
+    "symfony/dependency-injection": "^5.3",
+    "symfony/deprecation-contracts": "^2.4",
+    "symfony/http-kernel": "^5.3",
+    "symfony/polyfill-php80": "^1.16",
+    "symfony/service-contracts": "^1.1.6|^2"
+  },
+  "require-dev": {
+    "symfony/config": "^5.3",
+    "symfony/expression-language": "^5.3",
+    "phpunit/phpunit": "^9.5",
+    "symfony/phpunit-bridge": "^5.3",
+    "friendsofphp/php-cs-fixer": "^v3.2",
+    "sempro/phpunit-pretty-print": "dev-develop"
+  },
+  "suggest": {
+    "symfony/config": "",
+    "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
+    "symfony/expression-language": "For using expressions in service container configuration",
+    "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them"
+  },
+  "conflict": {
+    "ext-psr": "<1.1|>=2",
+    "symfony/config": "<5.3|>6.0",
+    "symfony/finder": "<5.3|>6.0",
+    "symfony/proxy-manager-bridge": "<5.3|>6.0"
+  },
+  "provide": {
+    "psr/container-implementation": "1.0",
+    "symfony/service-implementation": "1.0|2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "FRZB\\Component\\DependencyInjection\\": "",
+      "FRZB\\Component\\DependencyInjection\\Tests\\": "Tests/"
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "minimum-stability": "dev"
+}
