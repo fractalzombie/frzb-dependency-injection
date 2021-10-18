@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e0adf3f1f2dc9a744d9491dd2ecf49d",
+    "content-hash": "2575454283409fa1a738f31f98c69678",
     "packages": [
         {
             "name": "psr/container",
@@ -631,12 +631,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "d169373c86bd58507ae6ebe23a1ea809f3b3f55e"
+                "reference": "6b86781169d44af702b7c041e91f5c338ffbb070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/d169373c86bd58507ae6ebe23a1ea809f3b3f55e",
-                "reference": "d169373c86bd58507ae6ebe23a1ea809f3b3f55e",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6b86781169d44af702b7c041e91f5c338ffbb070",
+                "reference": "6b86781169d44af702b7c041e91f5c338ffbb070",
                 "shasum": ""
             },
             "require": {
@@ -695,7 +695,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-13T12:01:05+00:00"
+            "time": "2021-10-17T17:36:14+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -703,12 +703,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "f055dad8a110b6b8dd09fca0e0928b1f753d2d76"
+                "reference": "418e5d585752f54c8cf6f727576e5da7bd48ec9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/f055dad8a110b6b8dd09fca0e0928b1f753d2d76",
-                "reference": "f055dad8a110b6b8dd09fca0e0928b1f753d2d76",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/418e5d585752f54c8cf6f727576e5da7bd48ec9f",
+                "reference": "418e5d585752f54c8cf6f727576e5da7bd48ec9f",
                 "shasum": ""
             },
             "require": {
@@ -807,7 +807,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-08T23:17:06+00:00"
+            "time": "2021-10-15T17:19:33+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1453,17 +1453,70 @@
             "time": "2021-07-31T17:03:58+00:00"
         },
         {
+            "name": "dg/bypass-finals",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dg/bypass-finals.git",
+                "reference": "495f5bc762e7bf30a13ed8253f44bb3a701767bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dg/bypass-finals/zipball/495f5bc762e7bf30a13ed8253f44bb3a701767bb",
+                "reference": "495f5bc762e7bf30a13ed8253f44bb3a701767bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "nette/tester": "^2.3",
+                "phpstan/phpstan": "^0.12"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                }
+            ],
+            "description": "Removes final keyword from source code on-the-fly and allows mocking of final methods and classes",
+            "keywords": [
+                "finals",
+                "mocking",
+                "phpunit",
+                "testing",
+                "unit"
+            ],
+            "support": {
+                "issues": "https://github.com/dg/bypass-finals/issues",
+                "source": "https://github.com/dg/bypass-finals/tree/v1.3.1"
+            },
+            "time": "2021-04-09T10:42:55+00:00"
+        },
+        {
             "name": "doctrine/annotations",
             "version": "1.14.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "732ea120f89e570dd63828b91af83a1b48e21dfb"
+                "reference": "2da982ad3c26da81b91db8d7b54abf3a5922e73c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/732ea120f89e570dd63828b91af83a1b48e21dfb",
-                "reference": "732ea120f89e570dd63828b91af83a1b48e21dfb",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/2da982ad3c26da81b91db8d7b54abf3a5922e73c",
+                "reference": "2da982ad3c26da81b91db8d7b54abf3a5922e73c",
                 "shasum": ""
             },
             "require": {
@@ -1477,9 +1530,9 @@
                 "doctrine/coding-standard": "^6.0 || ^8.1",
                 "phpstan/phpstan": "^0.12.20",
                 "phpunit/phpunit": "^7.5 || ^8.0 || ^9.1.5",
-                "symfony/cache": "^4.4 || ^5.2"
+                "symfony/cache": "^4.4 || ^5.2",
+                "vimeo/psalm": "^4.10"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1523,7 +1576,7 @@
                 "issues": "https://github.com/doctrine/annotations/issues",
                 "source": "https://github.com/doctrine/annotations/tree/1.14.x"
             },
-            "time": "2021-08-05T19:26:38+00:00"
+            "time": "2021-10-15T21:17:00+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -2592,12 +2645,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c814a05837f2edb0d1471d6e3f4ab3501ca3899a"
+                "reference": "e5ba32bbd46d16d96fb2050116add184066dac65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c814a05837f2edb0d1471d6e3f4ab3501ca3899a",
-                "reference": "c814a05837f2edb0d1471d6e3f4ab3501ca3899a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e5ba32bbd46d16d96fb2050116add184066dac65",
+                "reference": "e5ba32bbd46d16d96fb2050116add184066dac65",
                 "shasum": ""
             },
             "require": {
@@ -2675,7 +2728,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.10"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5"
             },
             "funding": [
                 {
@@ -2687,7 +2740,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-25T07:38:51+00:00"
+            "time": "2021-10-17T15:13:37+00:00"
         },
         {
             "name": "psr/cache",
@@ -3596,6 +3649,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -4893,12 +4947,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "966d73c27464baca0642335a5952a77bfd602ebb"
+                "reference": "2118912c4ca22a2b9bf7fdf867ae7464d6348cdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/966d73c27464baca0642335a5952a77bfd602ebb",
-                "reference": "966d73c27464baca0642335a5952a77bfd602ebb",
+                "url": "https://api.github.com/repos/symfony/string/zipball/2118912c4ca22a2b9bf7fdf867ae7464d6348cdd",
+                "reference": "2118912c4ca22a2b9bf7fdf867ae7464d6348cdd",
                 "shasum": ""
             },
             "require": {
@@ -4970,7 +5024,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-17T09:03:20+00:00"
+            "time": "2021-10-16T13:59:16+00:00"
         },
         {
             "name": "symfony/var-exporter",

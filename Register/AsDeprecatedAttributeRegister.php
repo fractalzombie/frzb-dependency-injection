@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace FRZB\Component\DependencyInjection\Attribute\Register;
+namespace FRZB\Component\DependencyInjection\Register;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

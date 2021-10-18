@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Compiler;
 
+use FRZB\Component\DependencyInjection\Attribute\AsAlias;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -20,8 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-final class RegisterAsAliasAttributesPass extends RegisterAttributePass
+class RegisterAsAliasAttributesPass extends RegisterAttributePass
 {
+    #[Pure]
+    public function __construct()
+    {
+        parent::__construct(AsAlias::class);
+    }
+
     /**
      * {@inheritdoc}
      */

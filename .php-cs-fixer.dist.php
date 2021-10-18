@@ -5,7 +5,7 @@ declare(strict_types=1);
 $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
     ->exclude('vendor')
-    ->exclude('docs')
+    ->exclude('Documentation')
     ->in(__DIR__)
 ;
 
@@ -25,7 +25,7 @@ $rules = [
     'php_unit_test_class_requires_covers' => false,
     'php_unit_test_case_static_method_calls' => true,
     'nullable_type_declaration_for_default_null_value' => true,
-    'class_attributes_separation' => ['elements' => ['const' => 'none', 'method' => 'one', 'property' => 'one', 'trait_import' => 'none']],
+    'class_attributes_separation' => ['elements' => ['const' => 'only_if_meta', 'method' => 'one', 'property' => 'only_if_meta', 'trait_import' => 'none']],
     'class_definition' => ['single_line' => false, 'space_before_parenthesis' => true, 'single_item_single_line' => false, 'multi_line_extends_each_single_line' => false],
 ];
 

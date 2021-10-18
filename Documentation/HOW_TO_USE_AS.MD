@@ -1,2 +1,0 @@
-DependencyInjection Component
-=============================

@@ -16,7 +16,7 @@ namespace FRZB\Component\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsDeprecated
 {
-    private const DEFAULT_DEPRECATION_TEMPLATE = 'The "%service_id%" service is deprecated. You should stop using it, as it will be removed in the future.';
+    public const DEFAULT_DEPRECATION_TEMPLATE = 'The "%service_id%" service is deprecated. You should stop using it, as it will be removed in the future.';
 
     /**
      * @param string $message the deprecation template must contain the "%service_id%" placeholder

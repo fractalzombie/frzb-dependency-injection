@@ -15,7 +15,7 @@ namespace FRZB\Component\DependencyInjection\Exception;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 
-class AliasAttributeLogicException extends \LogicException
+final class AliasAttributeLogicException extends \LogicException
 {
     private AsAlias $attribute;
 

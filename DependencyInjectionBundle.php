@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection;
 
-use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Attribute\AsDecorated;
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
@@ -30,7 +29,7 @@ class DependencyInjectionBundle extends Bundle
             ->addCompilerPass(new RegisterAttributePass(AsService::class))
             ->addCompilerPass(new RegisterAttributePass(AsDecorated::class))
             ->addCompilerPass(new RegisterAttributePass(AsDeprecated::class))
-            ->addCompilerPass(new RegisterAsAliasAttributesPass(AsAlias::class))
+            ->addCompilerPass(new RegisterAsAliasAttributesPass())
         ;
     }
 }
