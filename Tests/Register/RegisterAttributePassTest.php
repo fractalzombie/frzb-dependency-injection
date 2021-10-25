@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Tests\Register;
 
+use FRZB\Component\DependencyInjection\Attribute\AsDecorated;
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAttributePass;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherServiceInterface;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DecoratedService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DeprecatedService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\Service;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceInterface;
@@ -66,5 +68,17 @@ class RegisterAttributePassTest extends ContainerTestCase
             TestConstant::TEST_DEPRECATION_ATTRIBUTE_MESSAGE,
             $this->getDefinition(DeprecatedService::class)->getDeprecation(DeprecatedService::class)
         );
+    }
+
+    public function testDecoratedRegistrationInContainer(): void
+    {
+        $this->addCompilerPasses(
+            new RegisterAttributePass(AsService::class),
+            new RegisterAttributePass(AsDecorated::class)
+        );
+
+        $this->compileContainer();
+
+        static::assertTrue($this->hasDefinition(DecoratedService::class));
     }
 }

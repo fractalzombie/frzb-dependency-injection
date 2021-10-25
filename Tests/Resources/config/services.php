@@ -8,8 +8,8 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $configurator): void {
     $configurator->services()
-        ->load('FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\\', '../Fixtures/**')
-        ->exclude('../Fixtures/{Attribute,Util,Request,Response,ValueObject,DTO,Data,Exception,UseCase,Tests}/**')
+        ->load('FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\\', '../Fixtures/*')
+        ->exclude('../Fixtures/{Attribute,Util,Request,Response,ValueObject,DTO,Data,Exception,UseCase,Tests}/*')
         ->autoconfigure()
         ->autowire()
         ->alias(ServiceInterface::class, Service::class)

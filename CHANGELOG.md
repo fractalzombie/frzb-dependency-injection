@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+1.0.1
+-----
+* Added test for `#[AsDecorated]` attribute
+
 1.0.0
 -----
 
