@@ -26,7 +26,12 @@ class AsAliasAttributeRegister extends AbstractAttributeRegister
 {
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
     {
+        $environment = $container->getParameter('kernel.environment');
         $attribute = self::getAttribute(AsAlias::class, $rAttribute);
+
+        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $attribute->getService())) {
+            return;
+        }
 
         try {
             $definitionClass = $container->getReflectionClass($attribute->getService());

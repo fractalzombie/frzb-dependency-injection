@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Tests\Util\Helper;
 
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceWithoutWhenAttributeButWithCorrectAsAliasEnv;
+
 interface TestConstant
 {
     public const TEST_ENVIRONMENT = 'TEST_VALUE';
     public const TEST_SERVICE_WITH_ARGUMENT_NAME = '$serviceWithArgument';
     public const TEST_SERVICE_WITH_ARGUMENT_FULL_NAME = 'FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceInterface '.self::TEST_SERVICE_WITH_ARGUMENT_NAME;
+    public const TEST_SERVICE_WITHOUT_WHEN_ATTRIBUTE_BUT_WITH_CORRECT_AS_ALIAS_ENV = ServiceWithoutWhenAttributeButWithCorrectAsAliasEnv::class.' $serviceWithoutWhenAttributeButWithCorrectAsAliasEnv';
     public const TEST_DEPRECATION_ATTRIBUTE_MESSAGE = [
         'package' => 'frzb/dependency-injection',
         'version' => '1.0.0',

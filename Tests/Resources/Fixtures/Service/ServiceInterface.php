@@ -9,6 +9,8 @@ use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 #[AsAlias(Service::class)]
 #[AsAlias(ServiceWithEnvParameter::class, aliasForArgument: '$serviceWithArgument')]
 #[AsAlias(DeprecatedService::class, aliasForArgument: '$serviceDeprecated')]
+#[AsAlias(ServiceWithWhenAttribute::class, aliasForArgument: '$serviceWithWhenAttribute')]
+#[AsAlias(ServiceWithCorrectWhenAttribute::class, aliasForArgument: '$serviceWithCorrectWhenAttribute')]
 interface ServiceInterface
 {
 }

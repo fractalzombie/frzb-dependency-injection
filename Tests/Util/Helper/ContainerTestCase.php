@@ -53,6 +53,7 @@ abstract class ContainerTestCase extends TestCase
     {
         try {
             $this->container = new ContainerBuilder($parameterBag);
+            $this->container->setParameter('kernel.environment', $_SERVER['APP_ENV']);
             $this->loader = new PhpFileLoader($this->container, new FileLocator(self::CONFIG_FILE_PATH));
             $this->loader->load(self::CONFIG_FILE_NAME);
         } catch (\Throwable $e) {

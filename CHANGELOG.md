@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+1.1.0
+-----
+* Added functionality for `#[When]` attribute
+
 1.0.1
 -----
 * Added test for `#[AsDecorated]` attribute

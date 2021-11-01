@@ -25,8 +25,13 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
 {
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
     {
+        $environment = $container->getParameter('kernel.environment');
         $attribute = self::getAttribute(AsService::class, $rAttribute);
         $definition = $container->getDefinition($rClass->getName());
+
+        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $rClass->getName())) {
+            return;
+        }
 
         $definition
             ->setClass($definition->getClass())

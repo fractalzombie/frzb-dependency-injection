@@ -15,7 +15,9 @@ use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\Decorate
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DeprecatedService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\Service;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceInterface;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceWithCorrectWhenAttribute;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceWithEnvParameter;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceWithWhenAttribute;
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\ContainerTestCase;
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\TestConstant;
 
@@ -52,6 +54,8 @@ class RegisterAttributePassTest extends ContainerTestCase
         static::assertSame(Service::class, $this->get(ServiceInterface::class)::class);
         static::assertSame(AnotherService::class, $this->get(AnotherServiceInterface::class)::class);
         static::assertSame(ServiceWithEnvParameter::class, $this->get(TestConstant::TEST_SERVICE_WITH_ARGUMENT_FULL_NAME)::class);
+        static::assertFalse($this->hasDefinition(ServiceWithWhenAttribute::class));
+        static::assertTrue($this->hasDefinition(ServiceWithCorrectWhenAttribute::class));
     }
 
     public function testDeprecatedRegistrationInContainer(): void
