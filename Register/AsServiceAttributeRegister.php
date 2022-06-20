@@ -13,8 +13,14 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
+use Fp\Collections\ArrayList;
+use Fp\Collections\Entry;
+use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Register #[AsService] attribute on definition that is autoconfigured.
@@ -33,6 +39,12 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             return;
         }
 
+        $arguments =[
+            ...$definition->getArguments(),
+            ...$attribute->getArguments(),
+            ...$this->getDefinitions($container, $attribute->getArguments()),
+        ];
+
         $definition
             ->setClass($definition->getClass())
             ->setShared($attribute->isShared() ?? $definition->isShared())
@@ -42,16 +54,51 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             ->setAbstract($attribute->isAbstract() ?? $definition->isAbstract())
             ->setFactory($attribute->getFactory() ?? $definition->getFactory())
             ->setFile($attribute->getFile() ?? $definition->getFile())
-            ->setArguments(array_merge($definition->getArguments(), $attribute->getArguments()))
-            ->setProperties(array_merge($definition->getProperties(), $attribute->getProperties()))
+            ->setArguments($arguments)
+            ->setProperties([...$definition->getProperties(), ...$attribute->getProperties()])
             ->setConfigurator($attribute->getConfigurator() ?? $definition->getConfigurator())
-            ->setMethodCalls(array_merge($definition->getMethodCalls(), $attribute->getCalls()))
-            ->setTags(array_merge($definition->getTags(), $attribute->getTags()))
+            ->setMethodCalls([...$definition->getMethodCalls(), ...$attribute->getCalls()])
+            ->setTags([...$definition->getTags(), ...$attribute->getTags()])
             ->setAutowired($attribute->isAutowire() ?? $definition->isAutowired())
             ->setAutoconfigured($attribute->isAutoconfigured() ?? $definition->isAutoconfigured())
-            ->setBindings(array_merge($definition->getBindings(), $attribute->getBindings()))
+            ->setBindings([...$definition->getBindings(), ...$attribute->getBindings()])
         ;
 
         $container->setDefinition($definition->getClass(), $definition);
+    }
+
+    private function getDefinitions(ContainerBuilder $container, array $arguments): array
+    {
+        $definitionsById = HashMap::collect($arguments)
+            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => str_contains($e->value, '@'))
+            ->map(static fn (Entry $e) => str_replace('@', '', $e->value))
+            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
+            ->map(static fn (Entry $e) => $container->getDefinition($e->value))
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
+
+        $definitionsByClass = HashMap::collect($arguments)
+            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => class_exists($e->value))
+            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
+            ->map(static fn (Entry $e) => $container->getDefinition($e->value))
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
+
+        $definitionsByAlias = HashMap::collect($arguments)
+            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => interface_exists($e->value) || class_exists($e->value))
+            ->filter(static fn (Entry $e) => $container->hasAlias($e->value))
+            ->map(static fn (Entry $e) => $container->getAlias($e->value))
+            ->filter(static fn (Entry $e) => $container->hasDefinition((string) $e->value))
+            ->map(static fn (Entry $e) => $container->getDefinition((string) $e->value))
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
+
+        return [...$definitionsById, ...$definitionsByClass, ...$definitionsByAlias];
     }
 }
