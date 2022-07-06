@@ -13,14 +13,11 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
-use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\RequestMapper\Extractor\ConstraintExtractor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Register #[AsService] attribute on definition that is autoconfigured.
@@ -39,7 +36,7 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             return;
         }
 
-        $arguments =[
+        $arguments = [
             ...$definition->getArguments(),
             ...$attribute->getArguments(),
             ...$this->getDefinitions($container, $attribute->getArguments()),
@@ -70,31 +67,29 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
     private function getDefinitions(ContainerBuilder $container, array $arguments): array
     {
         $definitionsById = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => \is_string($e->value))
             ->filter(static fn (Entry $e) => str_contains($e->value, '@'))
             ->map(static fn (Entry $e) => str_replace('@', '', $e->value))
             ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => $container->getDefinition($e->value))
+            ->map(static fn (Entry $e) => new Reference((string) $e->value))
             ->toAssocArray()
             ->getOrElse([])
         ;
 
         $definitionsByClass = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => \is_string($e->value))
             ->filter(static fn (Entry $e) => class_exists($e->value))
             ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => $container->getDefinition($e->value))
+            ->map(static fn (Entry $e) => new Reference((string) $e->value))
             ->toAssocArray()
             ->getOrElse([])
         ;
 
         $definitionsByAlias = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => is_string($e->value))
+            ->filter(static fn (Entry $e) => \is_string($e->value))
             ->filter(static fn (Entry $e) => interface_exists($e->value) || class_exists($e->value))
             ->filter(static fn (Entry $e) => $container->hasAlias($e->value))
-            ->map(static fn (Entry $e) => $container->getAlias($e->value))
-            ->filter(static fn (Entry $e) => $container->hasDefinition((string) $e->value))
-            ->map(static fn (Entry $e) => $container->getDefinition((string) $e->value))
+            ->map(static fn (Entry $e) => new Reference((string) $e->value))
             ->toAssocArray()
             ->getOrElse([])
         ;

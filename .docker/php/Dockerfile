@@ -21,7 +21,8 @@ RUN install-php-extensions \
       intl \
       mbstring \
       zip \
-      sockets
+      sockets \
+      xdebug
 
 # Clean Apt Manager
 RUN apt autoremove -y \
