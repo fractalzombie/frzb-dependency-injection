@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
+use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
@@ -42,6 +43,11 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             ...$this->getDefinitions($container, $attribute->getArguments()),
         ];
 
+        $methodCalls = [
+            ...$definition->getProperties(),
+            ...$this->getMethodCalls($container, $attribute->getCalls()),
+        ];
+
         $definition
             ->setClass($definition->getClass())
             ->setShared($attribute->isShared() ?? $definition->isShared())
@@ -54,7 +60,7 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             ->setArguments($arguments)
             ->setProperties([...$definition->getProperties(), ...$attribute->getProperties()])
             ->setConfigurator($attribute->getConfigurator() ?? $definition->getConfigurator())
-            ->setMethodCalls([...$definition->getMethodCalls(), ...$attribute->getCalls()])
+            ->setMethodCalls($methodCalls)
             ->setTags([...$definition->getTags(), ...$attribute->getTags()])
             ->setAutowired($attribute->isAutowire() ?? $definition->isAutowired())
             ->setAutoconfigured($attribute->isAutoconfigured() ?? $definition->isAutoconfigured())
@@ -62,6 +68,14 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
         ;
 
         $container->setDefinition($definition->getClass(), $definition);
+    }
+
+    private function getMethodCalls(ContainerBuilder $container, array $methodCalls): array
+    {
+        return HashMap::collect($methodCalls)
+            ->map(fn (Entry $e) => $this->getDefinitions($container, $e->value))
+            ->toArray()
+        ;
     }
 
     private function getDefinitions(ContainerBuilder $container, array $arguments): array
