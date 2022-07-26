@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use Symfony\Component\DependencyInjection\Attribute\When;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 
-#[When('dev')]
 #[AsService]
-class ServiceWithWhenAttribute implements ServiceInterface
+#[AsTagged(TaggedServiceInterface::class)]
+class TaggedService implements TaggedServiceInterface
 {
 }

@@ -8,7 +8,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[When('test')]
-#[AsService()]
+#[AsService]
 class ServiceWithCorrectWhenAttribute implements ServiceInterface
 {
 }

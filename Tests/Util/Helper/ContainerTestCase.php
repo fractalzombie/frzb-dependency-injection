@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Tests\Util\Helper;
 
-use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -98,19 +97,19 @@ abstract class ContainerTestCase extends TestCase
         return $this->container->getAlias($aliasId);
     }
 
-    /**
-     * @return Definition[]
-     */
-    #[Pure]
+    /** @return array<string, array> */
+    protected function getTags(?string $name = null): array
+    {
+        return $name ? $this->container->findTaggedServiceIds($name) : $this->container->findTags();
+    }
+
+    /** @return Definition[] */
     protected function getDefinitions(): array
     {
         return $this->container->getDefinitions();
     }
 
-    /**
-     * @return Alias[]
-     */
-    #[Pure]
+    /** @return Alias[] */
     protected function getAliases(): array
     {
         return $this->container->getAliases();

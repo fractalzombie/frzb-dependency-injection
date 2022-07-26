@@ -14,14 +14,16 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
-use FRZB\Component\DependencyInjection\Attribute\AsDecorated;
+use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\DependencyInjection\Register\AsAliasAttributeRegister;
 use FRZB\Component\DependencyInjection\Register\AsDecoratedAttributeRegister;
 use FRZB\Component\DependencyInjection\Register\AsDeprecatedAttributeRegister;
 use FRZB\Component\DependencyInjection\Register\AsServiceAttributeRegister;
-use FRZB\Component\DependencyInjection\Register\AttributeRegisterInterface;
+use FRZB\Component\DependencyInjection\Register\AsTaggedAttributeRegister;
+use FRZB\Component\DependencyInjection\Register\AttributeRegisterInterface as AttributeRegister;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -34,14 +36,10 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class RegisterAttributePass implements CompilerPassInterface
 {
-    /**
-     * @var class-string
-     */
+    /** @var class-string */
     private string $attributeClass;
 
-    /**
-     * @var array<class-string, AttributeRegisterInterface>
-     */
+    /** @var array<class-string, AttributeRegister> */
     private static array $attributeRegisters = [];
 
     public function __construct(string $attributeClass)
@@ -70,14 +68,13 @@ class RegisterAttributePass implements CompilerPassInterface
         return $definition->isAutoconfigured() && !$definition->hasTag('container.ignore_attributes');
     }
 
-    /**
-     * @param class-string $attributeClass
-     */
-    private static function getAttributeRegister(string $attributeClass): AttributeRegisterInterface
+    /** @param class-string $attributeClass */
+    private static function getAttributeRegister(string $attributeClass): AttributeRegister
     {
         $register = match ($attributeClass) {
             AsService::class => AsServiceAttributeRegister::class,
-            AsDecorated::class => AsDecoratedAttributeRegister::class,
+            AsTagged::class => AsTaggedAttributeRegister::class,
+            AsDecorator::class => AsDecoratedAttributeRegister::class,
             AsDeprecated::class => AsDeprecatedAttributeRegister::class,
             AsAlias::class => AsAliasAttributeRegister::class,
         };

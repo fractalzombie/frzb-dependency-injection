@@ -22,19 +22,19 @@
         "php": "^8.1",
         "fp4php/functional": "^4.18",
         "psr/container": "^1.1.1|^2.0|^3.0",
-        "symfony/dependency-injection": "^5.3|^5.4|^6.0|^6.1",
+        "symfony/dependency-injection": "^5.4|^6.0|^6.1",
         "symfony/deprecation-contracts": "^2.4",
-        "symfony/http-kernel": "^5.3|^5.4|^6.0|^6.1",
+        "symfony/http-kernel": "^5.4|^6.0|^6.1",
         "symfony/service-contracts": "^1.1.6|^2|^3"
     },
     "require-dev": {
-        "symfony/config": "^5.3|^5.4|^6.0|^6.1",
+        "symfony/config": "^5.4|^6.0|^6.1",
         "phpunit/php-code-coverage": "^9.2",
-        "symfony/expression-language": "^5.3|^5.4|^6.0|^6.1",
+        "symfony/expression-language": "^5.4|^6.0|^6.1",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^5.3|^5.4|^6.0|^6.1",
+        "symfony/phpunit-bridge": "^5.4|^6.0|^6.1",
         "friendsofphp/php-cs-fixer": "^v3.3",
-        "sempro/phpunit-pretty-print": "dev-develop",
+        "sempro/phpunit-pretty-print": "^1.4",
         "dg/bypass-finals": "^v1.3"
     },
     "suggest": {
@@ -45,9 +45,9 @@
     },
     "conflict": {
         "ext-psr": "<1.1|>=2",
-        "symfony/config": "<5.3|>6.1",
-        "symfony/finder": "<5.3|>6.1",
-        "symfony/proxy-manager-bridge": "<5.3|>6.1"
+        "symfony/config": "<5.4|>6.1",
+        "symfony/finder": "<5.4|>6.1",
+        "symfony/proxy-manager-bridge": "<5.4|>6.1"
     },
     "provide": {
         "psr/container-implementation": "1.0",
@@ -61,5 +61,5 @@
             "/Tests/"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

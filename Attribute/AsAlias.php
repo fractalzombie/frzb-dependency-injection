@@ -13,41 +13,24 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Attribute;
 
+use FRZB\Component\DependencyInjection\Enum\AliasType;
+use JetBrains\PhpStorm\Immutable;
+
+#[Immutable]
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class AsAlias
 {
-    public const WITHOUT_ARGUMENT_NAME = 0;
-    public const WITH_ARGUMENT_NAME = 1;
-    public const LOGIC_EXCEPTION = 2;
+    public readonly AliasType $aliasType;
 
     public function __construct(
-        private string $service,
-        private bool $public = true,
-        private ?string $aliasForArgument = null,
+        public readonly string $service,
+        public readonly bool $isPublic = true,
+        public readonly ?string $aliasForArgument = null,
     ) {
-    }
-
-    public function getService(): string
-    {
-        return $this->service;
-    }
-
-    public function isPublic(): bool
-    {
-        return $this->public;
-    }
-
-    public function getAliasForArgument(): ?string
-    {
-        return $this->aliasForArgument ? str_replace('$', '', $this->aliasForArgument) : null;
-    }
-
-    public function getAliasState(): int
-    {
-        return match (true) {
-            !empty($this->getAliasForArgument()) => self::WITH_ARGUMENT_NAME,
-            empty($this->getAliasForArgument()) => self::WITHOUT_ARGUMENT_NAME,
-            default => self::LOGIC_EXCEPTION,
+        $this->aliasType = match (true) {
+            !empty($this->aliasForArgument) => AliasType::WithArgumentName,
+            empty($this->aliasForArgument) => AliasType::WithoutArgumentName,
+            default => AliasType::LogicException,
         };
     }
 }

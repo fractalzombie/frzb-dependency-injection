@@ -13,24 +13,30 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
-use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Register #[AsDeprecated] attribute on definition that is autoconfigured.
+ * Register #[AsService] attribute on definition that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsDeprecatedAttributeRegister extends AbstractAttributeRegister
+class AsTaggedAttributeRegister extends AbstractAttributeRegister
 {
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
     {
-        $attribute = self::getAttribute(AsDeprecated::class, $rAttribute);
+        $environment = $container->getParameter('kernel.environment');
+        $attribute = self::getAttribute(AsTagged::class, $rAttribute);
         $definition = $container->getDefinition($rClass->getName());
 
+        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $rClass->getName())) {
+            return;
+        }
+
         $container->setDefinition(
-            $rClass->getName(),
-            $definition->setDeprecated($attribute->package, $attribute->version, $attribute->message),
+            $definition->getClass(),
+            $definition->addTag($attribute->name, TagHelper::toTag($attribute)),
         );
     }
 }

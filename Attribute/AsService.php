@@ -13,103 +13,50 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Attribute;
 
+use Fp\Collections\ArrayList;
+use Fp\Collections\Entry;
+use Fp\Collections\HashMap;
+use FRZB\Component\DependencyInjection\Exception\AttributeException;
+use JetBrains\PhpStorm\Immutable;
+
+#[Immutable]
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsService
 {
+    private const PARAMETER_PREFIX = '$';
+
+    public readonly array $arguments;
+
     public function __construct(
-        private bool $shared = true,
-        private bool $synthetic = false,
-        private bool $lazy = true,
-        private bool $public = true,
-        private bool $abstract = false,
-        private string|array|null $factory = null,
-        private ?string $file = null,
-        private array $arguments = [],
-        private array $properties = [],
-        private string|array|null $configurator = null,
-        private array $calls = [],
-        private array $tags = [],
-        private bool $autowire = true,
-        private bool $autoconfigured = true,
-        private array $bindings = [],
+        public readonly bool $isShared = true,
+        public readonly bool $isSynthetic = false,
+        public readonly bool $isLazy = true,
+        public readonly bool $isPublic = true,
+        public readonly bool $isAbstract = false,
+        public readonly string|array|null $factory = null,
+        public readonly ?string $file = null,
+        array $arguments = [],
+        public readonly array $properties = [],
+        public readonly string|array|null $configurator = null,
+        public readonly array $calls = [],
+        /** @var AsTagged[] */
+        public readonly array $tags = [],
+        public readonly bool $isAutowired = true,
+        public readonly bool $isAutoconfigured = true,
+        public readonly array $bindings = [],
     ) {
-    }
+        $this->arguments = HashMap::collect($arguments)
+            ->mapKeys(static fn (Entry $argument) => match (true) {
+                str_contains($argument->key, self::PARAMETER_PREFIX) => $argument->key,
+                default => self::PARAMETER_PREFIX.$argument->key,
+            })
+            ->toAssocArray()
+            ->getOrElse([])
+        ;
 
-    public function isShared(): bool
-    {
-        return $this->shared;
-    }
-
-    public function isSynthetic(): bool
-    {
-        return $this->synthetic;
-    }
-
-    public function isLazy(): bool
-    {
-        return $this->lazy;
-    }
-
-    public function isPublic(): bool
-    {
-        return $this->public;
-    }
-
-    public function isAbstract(): bool
-    {
-        return $this->abstract;
-    }
-
-    public function getFactory(): array|string|null
-    {
-        return $this->factory;
-    }
-
-    public function getFile(): ?string
-    {
-        return $this->file;
-    }
-
-    public function getArguments(): array
-    {
-        return array_combine(
-            array_map(static fn (string $key) => str_contains($key, '$') ? $key : '$'.$key, array_keys($this->arguments)),
-            array_values($this->arguments)
-        );
-    }
-
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    public function getConfigurator(): array|string|null
-    {
-        return $this->configurator;
-    }
-
-    public function getCalls(): array
-    {
-        return $this->calls;
-    }
-
-    public function getTags(): array
-    {
-        return $this->tags;
-    }
-
-    public function isAutowire(): bool
-    {
-        return $this->autowire;
-    }
-
-    public function isAutoconfigured(): bool
-    {
-        return $this->autoconfigured;
-    }
-
-    public function getBindings(): array
-    {
-        return $this->bindings;
+        ArrayList::collect($this->tags)
+            ->filter(static fn (mixed $tag) => !$tag instanceof AsTagged)
+            ->tap(static fn (mixed $tag) => throw AttributeException::mustBeOfType(AsTagged::class, $tag))
+        ;
     }
 }
