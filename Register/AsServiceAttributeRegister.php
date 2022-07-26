@@ -17,6 +17,8 @@ use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -39,35 +41,47 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
 
         $arguments = [
             ...$definition->getArguments(),
-            ...$attribute->getArguments(),
-            ...$this->getDefinitions($container, $attribute->getArguments()),
+            ...$attribute->arguments,
+            ...$this->getDefinitions($container, $attribute->arguments),
         ];
 
         $methodCalls = [
             ...$definition->getProperties(),
-            ...$this->getMethodCalls($container, $attribute->getCalls()),
+            ...$this->getMethodCalls($container, $attribute->calls),
         ];
 
+        $properties = [...$definition->getProperties(), ...$attribute->properties];
+        $bindings = [...$definition->getBindings(), ...$attribute->bindings];
+        $tags = [...$definition->getTags(), ...$this->getTags(...$attribute->tags)];
+
         $definition
-            ->setClass($definition->getClass())
-            ->setShared($attribute->isShared() ?? $definition->isShared())
-            ->setSynthetic($attribute->isSynthetic() ?? $definition->isSynthetic())
-            ->setLazy($attribute->isLazy() ?? $definition->isLazy())
-            ->setPublic($attribute->isPublic() ?? $definition->isPublic())
-            ->setAbstract($attribute->isAbstract() ?? $definition->isAbstract())
-            ->setFactory($attribute->getFactory() ?? $definition->getFactory())
-            ->setFile($attribute->getFile() ?? $definition->getFile())
+            ->setShared($attribute->isShared ?? $definition->isShared())
+            ->setSynthetic($attribute->isSynthetic ?? $definition->isSynthetic())
+            ->setLazy($attribute->isLazy ?? $definition->isLazy())
+            ->setPublic($attribute->isPublic ?? $definition->isPublic())
+            ->setAbstract($attribute->isAbstract ?? $definition->isAbstract())
+            ->setFactory($attribute->factory ?? $definition->getFactory())
+            ->setFile($attribute->file ?? $definition->getFile())
             ->setArguments($arguments)
-            ->setProperties([...$definition->getProperties(), ...$attribute->getProperties()])
-            ->setConfigurator($attribute->getConfigurator() ?? $definition->getConfigurator())
+            ->setProperties($properties)
+            ->setConfigurator($attribute->configurator ?? $definition->getConfigurator())
             ->setMethodCalls($methodCalls)
-            ->setTags([...$definition->getTags(), ...$attribute->getTags()])
-            ->setAutowired($attribute->isAutowire() ?? $definition->isAutowired())
-            ->setAutoconfigured($attribute->isAutoconfigured() ?? $definition->isAutoconfigured())
-            ->setBindings([...$definition->getBindings(), ...$attribute->getBindings()])
+            ->setTags($tags)
+            ->setAutowired($attribute->isAutowired ?? $definition->isAutowired())
+            ->setAutoconfigured($attribute->isAutoconfigured ?? $definition->isAutoconfigured())
+            ->setBindings($bindings)
         ;
 
         $container->setDefinition($definition->getClass(), $definition);
+    }
+
+    private function getTags(AsTagged ...$tags): array
+    {
+        return ArrayList::collect($tags)
+            ->map(TagHelper::toTagRepresentation(...))
+            ->reduce(array_merge(...))
+            ->getOrElse([])
+        ;
     }
 
     private function getMethodCalls(ContainerBuilder $container, array $methodCalls): array

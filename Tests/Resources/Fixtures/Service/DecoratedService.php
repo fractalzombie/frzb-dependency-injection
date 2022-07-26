@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 
-use FRZB\Component\DependencyInjection\Attribute\AsDecorated;
+use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use JetBrains\PhpStorm\Pure;
 
 #[AsService]
-#[AsDecorated(decorates: Service::class, decorationInnerName: '@.inner')]
+#[AsDecorator(decorates: Service::class, innerName: '@.inner')]
 class DecoratedService
 {
     private Service $service;

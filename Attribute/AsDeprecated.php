@@ -13,33 +13,19 @@ namespace FRZB\Component\DependencyInjection\Attribute;
  * file that was distributed with this source code.
  */
 
+use JetBrains\PhpStorm\Immutable;
+
+#[Immutable]
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsDeprecated
 {
     public const DEFAULT_DEPRECATION_TEMPLATE = 'The "%service_id%" service is deprecated. You should stop using it, as it will be removed in the future.';
 
-    /**
-     * @param string $message the deprecation template must contain the "%service_id%" placeholder
-     */
+    /** @param string $message the deprecation template must contain the "%service_id%" placeholder */
     public function __construct(
-        private string $package,
-        private string $version,
-        private string $message = self::DEFAULT_DEPRECATION_TEMPLATE,
+        public readonly string $package,
+        public readonly string $version,
+        public readonly string $message = self::DEFAULT_DEPRECATION_TEMPLATE,
     ) {
-    }
-
-    public function getPackage(): string
-    {
-        return $this->package;
-    }
-
-    public function getVersion(): string
-    {
-        return $this->version;
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
     }
 }

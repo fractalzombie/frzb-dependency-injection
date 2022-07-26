@@ -13,16 +13,18 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
+use Fp\Collections\ArrayList;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 abstract class AbstractAttributeRegister implements AttributeRegisterInterface
 {
+    /** {@inheritdoc} */
     public static function getAttribute(string $attributeClass, \ReflectionAttribute $rAttribute): object
     {
         return $rAttribute->newInstance();
     }
 
-    protected static function isPermittedEnvironmentOrEnvironmentIsNotDefined(string $environment, string $serviceClass): bool
+    protected static function isPermittedEnvironmentOrEnvironmentIsNotDefined(string $currentEnvironment, string $serviceClass): bool
     {
         try {
             $rService = new \ReflectionClass($serviceClass);
@@ -30,13 +32,15 @@ abstract class AbstractAttributeRegister implements AttributeRegisterInterface
             return false;
         }
 
-        $permittedEnvironments = array_map(
-            static fn (\ReflectionAttribute $a) => self::getAttribute(When::class, $a)->env,
-            $rService->getAttributes(When::class),
-        );
+        $permittedEnvironments = ArrayList::collect($rService->getAttributes(When::class))
+            ->map(static fn (\ReflectionAttribute $attribute) => self::getAttribute(When::class, $attribute)->env)
+        ;
 
-        $isEnvironmentPermitted = $permittedEnvironments && \in_array($environment, $permittedEnvironments, true);
-        $isEnvironmentIsNotDefined = !$permittedEnvironments;
+        $isEnvironmentIsNotDefined = $permittedEnvironments->isEmpty();
+        $isEnvironmentPermitted = $permittedEnvironments
+            ->first(static fn (string $environment) => $environment === $currentEnvironment)
+            ->isNonEmpty()
+        ;
 
         return $isEnvironmentPermitted || $isEnvironmentIsNotDefined;
     }

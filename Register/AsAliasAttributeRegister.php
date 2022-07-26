@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Register;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
-use FRZB\Component\DependencyInjection\Exception\AliasAttributeLogicException;
+use FRZB\Component\DependencyInjection\Enum\AliasType;
+use FRZB\Component\DependencyInjection\Exception\AttributeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -29,40 +30,40 @@ class AsAliasAttributeRegister extends AbstractAttributeRegister
         $environment = $container->getParameter('kernel.environment');
         $attribute = self::getAttribute(AsAlias::class, $rAttribute);
 
-        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $attribute->getService())) {
+        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $attribute->service)) {
             return;
         }
 
         try {
-            $definitionClass = $container->getReflectionClass($attribute->getService());
+            $definitionClass = $container->getReflectionClass($attribute->service);
         } catch (\ReflectionException $e) {
-            throw AliasAttributeLogicException::noDefinitionInContainer($attribute, $e);
+            throw AttributeException::noDefinitionInContainer($attribute, $e);
         }
 
         if ($rClass->isInterface() && !$definitionClass?->isSubclassOf($rClass->getName())) {
-            throw AliasAttributeLogicException::invalidImplementation($attribute, $rClass);
+            throw AttributeException::invalidImplementation($attribute, $rClass);
         }
 
-        match ($attribute->getAliasState()) {
-            $attribute::WITH_ARGUMENT_NAME => $this->registerAliasWithArgument($container, $rClass, $attribute),
-            $attribute::WITHOUT_ARGUMENT_NAME => $this->registerAliasWithoutArgument($container, $rClass, $attribute),
-            $attribute::LOGIC_EXCEPTION => throw AliasAttributeLogicException::unexpected($attribute),
+        match ($attribute->aliasType) {
+            AliasType::WithArgumentName => $this->registerAliasWithArgument($container, $rClass, $attribute),
+            AliasType::WithoutArgumentName => $this->registerAliasWithoutArgument($container, $rClass, $attribute),
+            AliasType::LogicException => throw AttributeException::unexpected($attribute),
         };
     }
 
     private function registerAliasWithArgument(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void
     {
         $container
-            ->registerAliasForArgument($attribute->getService(), $rClass->getName(), $attribute->getAliasForArgument())
-            ->setPublic($attribute->isPublic())
+            ->registerAliasForArgument($attribute->service, $rClass->getName(), $attribute->aliasForArgument)
+            ->setPublic($attribute->isPublic)
         ;
     }
 
     private function registerAliasWithoutArgument(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void
     {
         $container
-            ->setAlias($rClass->getName(), $attribute->getService())
-            ->setPublic($attribute->isPublic())
+            ->setAlias($rClass->getName(), $attribute->service)
+            ->setPublic($attribute->isPublic)
         ;
     }
 }

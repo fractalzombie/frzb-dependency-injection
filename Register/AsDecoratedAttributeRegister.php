@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Register;
 
-use FRZB\Component\DependencyInjection\Attribute\AsDecorated;
+use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -25,16 +25,12 @@ class AsDecoratedAttributeRegister extends AbstractAttributeRegister
 {
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
     {
-        $attribute = self::getAttribute(AsDecorated::class, $rAttribute);
+        $attribute = self::getAttribute(AsDecorator::class, $rAttribute);
         $definition = $container->getDefinition($rClass->getName());
 
-        $definition->setDecoratedService(
-            $attribute->getDecorates(),
-            $attribute->getDecorationInnerName(),
-            $attribute->getDecorationPriority(),
-            $attribute->getDecorationOnInvalid(),
+        $container->setDefinition(
+            $definition->getClass(),
+            $definition->setDecoratedService($attribute->decorates, $attribute->innerName, $attribute->priority, $attribute->onInvalid->value),
         );
-
-        $container->setDefinition($definition->getClass(), $definition);
     }
 }

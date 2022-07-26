@@ -6,27 +6,26 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
     ->exclude('vendor')
     ->exclude('Documentation')
+    ->notPath('#Enum#')
     ->in(__DIR__)
 ;
 
 $rules = [
-    // Set of rules
     '@PSR2' => true,
     '@PSR12' => true,
     '@Symfony' => true,
-    '@PhpCsFixer' => true,
     '@Symfony:risky' => true,
+    '@PhpCsFixer' => true,
     '@PHP80Migration' => true,
     '@PHP80Migration:risky' => true,
     '@PHPUnit84Migration:risky' => true,
-    // Single rules
-    'phpdoc_line_span' => true,
+    'phpdoc_line_span' => ['const' => 'single', 'property' => 'single', 'method' => 'single'],
+    'comment_to_phpdoc' => ['ignored_tags' => ['scrutinizer']],
+    'phpdoc_to_comment' => ['ignored_tags' => ['scrutinizer']],
     'date_time_immutable' => true,
+    'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => true],
+    'php_unit_test_case_static_method_calls' => false,
     'php_unit_test_class_requires_covers' => false,
-    'php_unit_test_case_static_method_calls' => true,
-    'nullable_type_declaration_for_default_null_value' => true,
-    'class_attributes_separation' => ['elements' => ['const' => 'only_if_meta', 'method' => 'one', 'property' => 'only_if_meta', 'trait_import' => 'none']],
-    'class_definition' => ['single_line' => false, 'space_before_parenthesis' => true, 'single_item_single_line' => false, 'multi_line_extends_each_single_line' => false],
 ];
 
 return (new PhpCsFixer\Config())

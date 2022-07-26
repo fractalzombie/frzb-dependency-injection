@@ -20,9 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 interface AttributeRegisterInterface
 {
-    /**
-     * Register dependency in container by attribute.
-     */
+    /** Register dependency in container by attribute. */
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void;
 
     /**

@@ -30,9 +30,7 @@ class RegisterAsAliasAttributesPass extends RegisterAttributePass
         parent::__construct(AsAlias::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function process(ContainerBuilder $container): void
     {
         foreach ($container->getAliases() as $id => $alias) {
