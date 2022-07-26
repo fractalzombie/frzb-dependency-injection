@@ -59,13 +59,18 @@ class RegisterAttributePass implements CompilerPassInterface
     protected function processClass(ContainerBuilder $container, \ReflectionClass $class): void
     {
         foreach ($class->getAttributes($this->attributeClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-            self::getAttributeRegister($this->attributeClass)->register($container, $class, $attribute);
+            self::getAttributeRegister($this->attributeClass)->register($container, $class, $attribute->newInstance());
         }
     }
 
     private function accept(Definition $definition): bool
     {
         return $definition->isAutoconfigured() && !$definition->hasTag('container.ignore_attributes');
+    }
+
+    private function getEnvironment(ContainerBuilder $container): string
+    {
+        return $container->getParameter('kernel.environment');
     }
 
     /** @param class-string $attributeClass */

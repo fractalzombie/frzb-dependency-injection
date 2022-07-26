@@ -18,6 +18,7 @@ use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -27,15 +28,13 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsServiceAttributeRegister extends AbstractAttributeRegister
+class AsServiceAttributeRegister implements AttributeRegisterInterface
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsService $attribute): void
     {
-        $environment = $container->getParameter('kernel.environment');
-        $attribute = self::getAttribute(AsService::class, $rAttribute);
         $definition = $container->getDefinition($rClass->getName());
 
-        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $rClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $rClass->getName())) {
             return;
         }
 
@@ -71,8 +70,6 @@ class AsServiceAttributeRegister extends AbstractAttributeRegister
             ->setAutoconfigured($attribute->isAutoconfigured ?? $definition->isAutoconfigured())
             ->setBindings($bindings)
         ;
-
-        $container->setDefinition($definition->getClass(), $definition);
     }
 
     private function getTags(AsTagged ...$tags): array

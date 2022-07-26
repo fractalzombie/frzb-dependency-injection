@@ -21,16 +21,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsDeprecatedAttributeRegister extends AbstractAttributeRegister
+class AsDeprecatedAttributeRegister implements AttributeRegisterInterface
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsDeprecated $attribute): void
     {
-        $attribute = self::getAttribute(AsDeprecated::class, $rAttribute);
-        $definition = $container->getDefinition($rClass->getName());
-
-        $container->setDefinition(
-            $rClass->getName(),
-            $definition->setDeprecated($attribute->package, $attribute->version, $attribute->message),
-        );
+        $container->getDefinition($rClass->getName())
+            ->setDeprecated($attribute->package, $attribute->version, $attribute->message)
+        ;
     }
 }

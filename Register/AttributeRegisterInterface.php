@@ -16,19 +16,10 @@ namespace FRZB\Component\DependencyInjection\Register;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @template T
+ * Register dependency in container by attribute.
+ *
+ * @method register(ContainerBuilder $container, \ReflectionClass $rClass, \Attribute $attribute): void
  */
 interface AttributeRegisterInterface
 {
-    /** Register dependency in container by attribute. */
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void;
-
-    /**
-     * Get attribute instance.
-     *
-     * @param class-string<T> $attributeClass
-     *
-     * @return T
-     */
-    public static function getAttribute(string $attributeClass, \ReflectionAttribute $rAttribute): object;
 }
