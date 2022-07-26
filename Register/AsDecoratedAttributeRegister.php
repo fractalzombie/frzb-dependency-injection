@@ -21,16 +21,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsDecoratedAttributeRegister extends AbstractAttributeRegister
+class AsDecoratedAttributeRegister implements AttributeRegisterInterface
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsDecorator $attribute): void
     {
-        $attribute = self::getAttribute(AsDecorator::class, $rAttribute);
-        $definition = $container->getDefinition($rClass->getName());
-
-        $container->setDefinition(
-            $definition->getClass(),
-            $definition->setDecoratedService($attribute->decorates, $attribute->innerName, $attribute->priority, $attribute->onInvalid->value),
-        );
+        $container->getDefinition($rClass->getName())
+            ->setDecoratedService($attribute->decorates, $attribute->innerName, $attribute->priority, $attribute->onInvalid->value)
+        ;
     }
 }

@@ -16,6 +16,7 @@ namespace FRZB\Component\DependencyInjection\Register;
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Enum\AliasType;
 use FRZB\Component\DependencyInjection\Exception\AttributeException;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -23,14 +24,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsAliasAttributeRegister extends AbstractAttributeRegister
+class AsAliasAttributeRegister implements AttributeRegisterInterface
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void
     {
         $environment = $container->getParameter('kernel.environment');
-        $attribute = self::getAttribute(AsAlias::class, $rAttribute);
 
-        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $attribute->service)) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $attribute->service)) {
             return;
         }
 

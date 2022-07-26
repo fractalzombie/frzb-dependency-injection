@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Register;
 
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -22,21 +23,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsTaggedAttributeRegister extends AbstractAttributeRegister
+class AsTaggedAttributeRegister implements AttributeRegisterInterface
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, \ReflectionAttribute $rAttribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsTagged $attribute): void
     {
-        $environment = $container->getParameter('kernel.environment');
-        $attribute = self::getAttribute(AsTagged::class, $rAttribute);
-        $definition = $container->getDefinition($rClass->getName());
-
-        if ($attribute && !self::isPermittedEnvironmentOrEnvironmentIsNotDefined($environment, $rClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $rClass->getName())) {
             return;
         }
 
-        $container->setDefinition(
-            $definition->getClass(),
-            $definition->addTag($attribute->name, TagHelper::toTag($attribute)),
-        );
+        $container->getDefinition($rClass->getName())
+            ->addTag($attribute->name, TagHelper::toTag($attribute))
+        ;
     }
 }
