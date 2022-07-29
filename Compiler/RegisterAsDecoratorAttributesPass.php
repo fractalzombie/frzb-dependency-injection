@@ -14,20 +14,18 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
  *
- * Register #[AsDecorator] attribute on definition that is autowired.
+ * Register #[AsDecorator] attribute on definition that is autowired
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
 final class RegisterAsDecoratorAttributesPass extends AbstractRegisterAttributePass
 {
-    #[Pure]
     public function __construct()
     {
         parent::__construct(AsDecorator::class);

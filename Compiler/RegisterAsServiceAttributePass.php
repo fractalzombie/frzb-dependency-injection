@@ -13,28 +13,21 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Compiler;
 
-use Fp\Collections\ArrayList;
-use Fp\Collections\Entry;
-use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\DependencyInjection\Attribute\AsTagged;
-use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
+use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @internal
  *
- * Register #[AsService] attribute on definition that is autoconfigured.
+ * Register #[AsService] attribute on definition that is autoconfigured
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
 final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
 {
-    #[Pure]
     public function __construct()
     {
         parent::__construct(AsService::class);
@@ -52,85 +45,57 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
         $arguments = [
             ...$definition->getArguments(),
             ...$attribute->arguments,
-            ...$this->getDefinitions($container, $attribute->arguments),
+            ...DefinitionHelper::mapDefinitionArguments($container, $attribute->arguments),
         ];
 
         $methodCalls = [
-            ...$definition->getProperties(),
-            ...$this->getMethodCalls($container, $attribute->calls),
+            ...$definition->getMethodCalls(),
+            ...DefinitionHelper::mapDefinitionMethodCalls($container, $attribute->calls),
         ];
 
-        $properties = [...$definition->getProperties(), ...$attribute->properties];
-        $bindings = [...$definition->getBindings(), ...$attribute->bindings];
-        $tags = [...$definition->getTags(), ...$this->getTags(...$attribute->tags)];
+        $properties = [
+            ...$definition->getProperties(),
+            ...$attribute->properties,
+        ];
+
+        $bindings = [
+            ...$definition->getBindings(),
+            ...$attribute->bindings,
+        ];
+
+        $tags = [
+            ...$definition->getTags(),
+            ...TagHelper::mapTags(...$attribute->tags),
+        ];
+
+        $factory = $attribute->factory ?? $definition->getFactory();
+        $configurator = $attribute->configurator ?? $definition->getConfigurator();
+        $file = $attribute->file ?? $definition->getFile();
+
+        $isShared = $attribute->isShared ?? $definition->isShared();
         $isLazy = $attribute->isLazy ? !$rClass->isFinal() : $attribute->isLazy;
+        $isAbstract = $attribute->isAbstract ? $rClass->isAbstract() : $attribute->isAbstract;
+        $isPublic = $attribute->isPublic ?? $definition->isPublic();
+        $isSynthetic = $attribute->isSynthetic ?? $definition->isSynthetic();
+        $isAutowired = $attribute->isAutowired ?? $definition->isAutowired();
+        $isAutoconfigured = $attribute->isAutoconfigured ?? $definition->isAutoconfigured();
 
         $definition
-            ->setShared($attribute->isShared ?? $definition->isShared())
-            ->setSynthetic($attribute->isSynthetic ?? $definition->isSynthetic())
-            ->setLazy($isLazy)
-            ->setPublic($attribute->isPublic ?? $definition->isPublic())
-            ->setAbstract($attribute->isAbstract ?? $definition->isAbstract())
-            ->setFactory($attribute->factory ?? $definition->getFactory())
-            ->setFile($attribute->file ?? $definition->getFile())
+            ->setFactory($factory)
+            ->setFile($file)
             ->setArguments($arguments)
             ->setProperties($properties)
-            ->setConfigurator($attribute->configurator ?? $definition->getConfigurator())
+            ->setConfigurator($configurator)
             ->setMethodCalls($methodCalls)
             ->setTags($tags)
-            ->setAutowired($attribute->isAutowired ?? $definition->isAutowired())
-            ->setAutoconfigured($attribute->isAutoconfigured ?? $definition->isAutoconfigured())
             ->setBindings($bindings)
+            ->setShared($isShared)
+            ->setSynthetic($isSynthetic)
+            ->setLazy($isLazy)
+            ->setPublic($isPublic)
+            ->setAbstract($isAbstract)
+            ->setAutowired($isAutowired)
+            ->setAutoconfigured($isAutoconfigured)
         ;
-    }
-
-    private function getTags(AsTagged ...$tags): array
-    {
-        return ArrayList::collect($tags)
-            ->map(TagHelper::toTagRepresentation(...))
-            ->reduce(array_merge(...))
-            ->getOrElse([])
-        ;
-    }
-
-    private function getMethodCalls(ContainerBuilder $container, array $methodCalls): array
-    {
-        return HashMap::collect($methodCalls)
-            ->map(fn (Entry $e) => $this->getDefinitions($container, $e->value))
-            ->toArray()
-        ;
-    }
-
-    private function getDefinitions(ContainerBuilder $container, array $arguments): array
-    {
-        $definitionsById = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => str_contains($e->value, '@'))
-            ->map(static fn (Entry $e) => str_replace('@', '', $e->value))
-            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
-        ;
-
-        $definitionsByClass = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => class_exists($e->value))
-            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
-        ;
-
-        $definitionsByAlias = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => interface_exists($e->value) || class_exists($e->value))
-            ->filter(static fn (Entry $e) => $container->hasAlias($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
-        ;
-
-        return [...$definitionsById, ...$definitionsByClass, ...$definitionsByAlias];
     }
 }

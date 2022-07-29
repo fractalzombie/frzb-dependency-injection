@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Tests\Register;
 
-use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
-use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
-use FRZB\Component\DependencyInjection\Attribute\AsService;
-use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsDeprecatedAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsServiceAttributePass;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Helper;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use JetBrains\PhpStorm\Immutable;
 
@@ -23,5 +24,14 @@ final class TagHelper
     public static function toTag(AsTagged $tag): array
     {
         return PropertyHelper::mapProperties($tag, [$tag::getNameProperty()]);
+    }
+
+    public static function mapTags(AsTagged ...$tags): array
+    {
+        return ArrayList::collect($tags)
+            ->map(self::toTagRepresentation(...))
+            ->reduce(array_merge(...))
+            ->getOrElse([])
+        ;
     }
 }

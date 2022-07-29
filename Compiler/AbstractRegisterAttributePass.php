@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This is package for Symfony framework.
+ *
+ * (c) Mykhailo Shtanko <fractalzombie@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use Fp\Collections\ArrayList;
@@ -13,7 +22,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * @internal
  *
- * Registers services by attributes in DI.
+ * Registers services by attributes in DI
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  *

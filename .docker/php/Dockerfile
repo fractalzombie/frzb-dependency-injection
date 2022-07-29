@@ -24,7 +24,7 @@ RUN apk add --no-cache \
     librdkafka-dev
 
 # Install PHP
-RUN install-php-extensions \v
+RUN install-php-extensions \
     bz2 \
     pcntl \
     intl \
@@ -33,10 +33,6 @@ RUN install-php-extensions \v
     sockets \
     xdebug \
     @composer
-
-# Install symfony cli
-RUN curl -LsS https://get.symfony.com/cli/installer -o /usr/local/bin/symfony \
- && chmod a+x /usr/local/bin/symfony
 
 # Configure PHP
 COPY conf/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini

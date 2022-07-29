@@ -14,20 +14,18 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
  *
- * Register #[AsDeprecated] attribute on definition that is autoconfigured.
+ * Register #[AsDeprecated] attribute on definition that is autoconfigured
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
 final class RegisterAsDeprecatedAttributesPass extends AbstractRegisterAttributePass
 {
-    #[Pure]
     public function __construct()
     {
         parent::__construct(AsDeprecated::class);

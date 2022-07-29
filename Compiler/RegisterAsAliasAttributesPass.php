@@ -16,21 +16,18 @@ namespace FRZB\Component\DependencyInjection\Compiler;
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Enum\AliasType;
 use FRZB\Component\DependencyInjection\Exception\AttributeException;
-use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
  *
- * Register #[AsAlias] attribute on alias that is autoconfigured.
+ * Register #[AsAlias] attribute on alias that is autoconfigured
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
 final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
 {
-    #[Pure]
     public function __construct()
     {
         parent::__construct(AsAlias::class);

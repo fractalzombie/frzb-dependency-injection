@@ -15,7 +15,9 @@ namespace FRZB\Component\DependencyInjection\Exception;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 final class AttributeException extends \LogicException
 {
     private function __construct(string $message, ?\Throwable $previous = null)
@@ -34,11 +36,7 @@ final class AttributeException extends \LogicException
 
     public static function invalidImplementation(AsAlias|AsService $attribute, \ReflectionClass $aliasClass, ?\Throwable $previous = null): self
     {
-        $message = sprintf(
-            'Class "%s" must implement or be subclass of "%s"',
-            $attribute->service,
-            $aliasClass->getName(),
-        );
+        $message = sprintf('Class "%s" must implement or be subclass of "%s"', $attribute->service, $aliasClass->getName());
 
         return new self($message, $previous);
     }
