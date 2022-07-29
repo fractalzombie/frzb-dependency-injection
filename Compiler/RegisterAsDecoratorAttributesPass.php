@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * @internal
  *
- * Register #[AsDecorator] attribute on definition that is autowired.
+ * Register #[AsDecorator] attribute on definition that is autowired
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */

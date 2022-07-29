@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * @internal
  *
- * Registers services by attributes in DI.
+ * Registers services by attributes in DI
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  *

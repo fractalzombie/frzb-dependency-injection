@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
-use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +22,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * @internal
  *
- * Register #[AsTagged] attribute on definition that is autoconfigured.
+ * Register #[AsTagged] attribute on definition that is autoconfigured
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */

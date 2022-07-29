@@ -18,7 +18,6 @@ use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
-use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,7 +27,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * @internal
  *
- * Register #[AsService] attribute on definition that is autoconfigured.
+ * Register #[AsService] attribute on definition that is autoconfigured
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
