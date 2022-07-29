@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace FRZB\Component\DependencyInjection\Register;
+namespace FRZB\Component\DependencyInjection\Compiler;
 
 use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
@@ -20,7 +20,9 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -28,9 +30,20 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsServiceAttributeRegister implements AttributeRegisterInterface
+final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
 {
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsService $attribute): void
+    #[Pure]
+    public function __construct()
+    {
+        parent::__construct(AsService::class);
+    }
+
+    protected function accept(Definition $definition): bool
+    {
+        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
+    }
+
+    protected function register(ContainerBuilder $container, \ReflectionClass $rClass, AsService $attribute): void
     {
         $definition = $container->getDefinition($rClass->getName());
 

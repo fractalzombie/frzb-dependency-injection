@@ -11,22 +11,35 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace FRZB\Component\DependencyInjection\Register;
+namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Register #[AsDeprecated] attribute on definition that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  */
-class AsDeprecatedAttributeRegister implements AttributeRegisterInterface
+final class RegisterAsDeprecatedAttributesPass extends AbstractRegisterAttributePass
 {
+    #[Pure]
+    public function __construct()
+    {
+        parent::__construct(AsDeprecated::class);
+    }
+
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsDeprecated $attribute): void
     {
         $container->getDefinition($rClass->getName())
             ->setDeprecated($attribute->package, $attribute->version, $attribute->message)
         ;
+    }
+
+    protected function accept(Definition $definition): bool
+    {
+        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
     }
 }
