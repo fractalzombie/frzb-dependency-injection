@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection;
 
-use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
-use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
-use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
-use FRZB\Component\DependencyInjection\Compiler\RegisterAttributePass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsDecoratorAttributesPass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsDeprecatedAttributesPass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsServiceAttributePass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsTaggedAttributesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,10 +26,11 @@ class DependencyInjectionBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         $container
-            ->addCompilerPass(new RegisterAttributePass(AsService::class))
-            ->addCompilerPass(new RegisterAttributePass(AsDecorator::class))
-            ->addCompilerPass(new RegisterAttributePass(AsDeprecated::class))
             ->addCompilerPass(new RegisterAsAliasAttributesPass())
+            ->addCompilerPass(new RegisterAsServiceAttributePass())
+            ->addCompilerPass(new RegisterAsTaggedAttributesPass())
+            ->addCompilerPass(new RegisterAsDecoratorAttributesPass())
+            ->addCompilerPass(new RegisterAsDeprecatedAttributesPass())
         ;
     }
 }

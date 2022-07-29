@@ -9,7 +9,9 @@ use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
-use FRZB\Component\DependencyInjection\Compiler\RegisterAttributePass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsDeprecatedAttributesPass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsServiceAttributePass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsTaggedAttributesPass;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherServiceInterface;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DecoratedService;
@@ -36,7 +38,9 @@ class RegisterAttributePassTest extends ContainerTestCase
 
     public function testServiceRegistrationInContainer(): void
     {
-        $this->addCompilerPasses(new RegisterAttributePass(AsService::class));
+        $this->addCompilerPasses(
+            new RegisterAsServiceAttributePass(),
+        );
 
         $this->compileContainer();
 
@@ -48,7 +52,7 @@ class RegisterAttributePassTest extends ContainerTestCase
     public function testAliasRegistrationInContainer(): void
     {
         $this->addCompilerPasses(
-            new RegisterAttributePass(AsService::class),
+            new RegisterAsServiceAttributePass(),
             new RegisterAsAliasAttributesPass(),
         );
 
@@ -65,8 +69,8 @@ class RegisterAttributePassTest extends ContainerTestCase
     public function testDeprecatedRegistrationInContainer(): void
     {
         $this->addCompilerPasses(
-            new RegisterAttributePass(AsService::class),
-            new RegisterAttributePass(AsDeprecated::class),
+            new RegisterAsServiceAttributePass(),
+            new RegisterAsDeprecatedAttributesPass(),
         );
 
         $this->compileContainer();
@@ -81,8 +85,8 @@ class RegisterAttributePassTest extends ContainerTestCase
     public function testDecoratedRegistrationInContainer(): void
     {
         $this->addCompilerPasses(
-            new RegisterAttributePass(AsService::class),
-            new RegisterAttributePass(AsDecorator::class),
+            new RegisterAsServiceAttributePass(),
+            new RegisterAsDeprecatedAttributesPass(),
         );
 
         $this->compileContainer();
@@ -93,8 +97,8 @@ class RegisterAttributePassTest extends ContainerTestCase
     public function testTaggedRegistrationInContainer(): void
     {
         $this->addCompilerPasses(
-            new RegisterAttributePass(AsService::class),
-            new RegisterAttributePass(AsTagged::class),
+            new RegisterAsServiceAttributePass(),
+            new RegisterAsTaggedAttributesPass(),
             new RegisterAsAliasAttributesPass(),
         );
 
