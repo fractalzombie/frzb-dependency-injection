@@ -63,11 +63,12 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
         $properties = [...$definition->getProperties(), ...$attribute->properties];
         $bindings = [...$definition->getBindings(), ...$attribute->bindings];
         $tags = [...$definition->getTags(), ...$this->getTags(...$attribute->tags)];
+        $isLazy = $attribute->isLazy ? !$rClass->isFinal() : $attribute->isLazy;
 
         $definition
             ->setShared($attribute->isShared ?? $definition->isShared())
             ->setSynthetic($attribute->isSynthetic ?? $definition->isSynthetic())
-            ->setLazy($attribute->isLazy ?? $definition->isLazy())
+            ->setLazy($isLazy)
             ->setPublic($attribute->isPublic ?? $definition->isPublic())
             ->setAbstract($attribute->isAbstract ?? $definition->isAbstract())
             ->setFactory($attribute->factory ?? $definition->getFactory())
