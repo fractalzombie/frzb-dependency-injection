@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
+ * @internal
+ *
  * Register #[AsTagged] attribute on definition that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
@@ -35,10 +37,6 @@ final class RegisterAsTaggedAttributesPass extends AbstractRegisterAttributePass
 
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsTagged $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $rClass->getName())) {
-            return;
-        }
-
         $container->getDefinition($rClass->getName())
             ->addTag($attribute->name, TagHelper::toTag($attribute))
         ;

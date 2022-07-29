@@ -6,8 +6,9 @@ namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 
+/** @internal */
 #[AsService]
-class Service implements ServiceInterface
+final class Service implements ServiceInterface
 {
     private AnotherServiceInterface $anotherService;
 

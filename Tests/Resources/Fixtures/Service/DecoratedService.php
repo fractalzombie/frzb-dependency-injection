@@ -8,9 +8,10 @@ use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use JetBrains\PhpStorm\Pure;
 
+/** @internal */
 #[AsService]
 #[AsDecorator(decorates: Service::class, innerName: '@.inner')]
-class DecoratedService
+final class DecoratedService
 {
     private Service $service;
 

@@ -6,6 +6,7 @@ namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 
+/** @internal */
 #[AsAlias(AnotherService::class)]
 interface AnotherServiceInterface
 {

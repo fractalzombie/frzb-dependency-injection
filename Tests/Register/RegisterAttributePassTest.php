@@ -26,10 +26,8 @@ use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\TaggedSe
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\ContainerTestCase;
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\TestConstant;
 
-/**
- * @internal
- */
-class RegisterAttributePassTest extends ContainerTestCase
+/** @internal */
+final class RegisterAttributePassTest extends ContainerTestCase
 {
     protected function setUp(): void
     {
