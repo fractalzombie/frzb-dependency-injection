@@ -7,8 +7,9 @@ namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
+/** @internal */
 #[When('test')]
 #[AsService]
-class ServiceWithCorrectWhenAttribute implements ServiceInterface
+final class ServiceWithCorrectWhenAttribute implements ServiceInterface
 {
 }

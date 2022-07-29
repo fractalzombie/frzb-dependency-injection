@@ -26,6 +26,8 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
+ * @internal
+ *
  * Register #[AsService] attribute on definition that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
@@ -46,10 +48,6 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
     protected function register(ContainerBuilder $container, \ReflectionClass $rClass, AsService $attribute): void
     {
         $definition = $container->getDefinition($rClass->getName());
-
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $rClass->getName())) {
-            return;
-        }
 
         $arguments = [
             ...$definition->getArguments(),

@@ -14,9 +14,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- * @template T
- */
+/** @internal */
 abstract class ContainerTestCase extends TestCase
 {
     private const CONFIG_FILE_PATH = __DIR__.'/../../Resources/config';
@@ -30,6 +28,8 @@ abstract class ContainerTestCase extends TestCase
     }
 
     /**
+     * @template T
+     *
      * @param class-string<T> $class
      *
      * @return null|T

@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
+ * @internal
+ *
  * Register #[AsDeprecated] attribute on definition that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>

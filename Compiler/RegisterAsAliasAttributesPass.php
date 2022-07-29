@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
+ * @internal
+ *
  * Register #[AsAlias] attribute on alias that is autoconfigured.
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
@@ -46,10 +48,6 @@ final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
 
     public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $attribute->service)) {
-            return;
-        }
-
         try {
             $definitionClass = $container->getReflectionClass($attribute->service);
         } catch (\ReflectionException $e) {

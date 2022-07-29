@@ -7,8 +7,9 @@ namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 
+/** @internal */
 #[AsService(tags: [new AsTagged(AnotherServiceInterface::class)])]
-class AnotherService implements AnotherServiceInterface
+final class AnotherService implements AnotherServiceInterface
 {
     public const SOMETHING_VALUE = 'something';
 
