@@ -15,6 +15,7 @@ namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
 use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -38,9 +39,13 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
         return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
     }
 
-    protected function register(ContainerBuilder $container, \ReflectionClass $rClass, AsService $attribute): void
+    protected function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsService $attribute): void
     {
-        $definition = $container->getDefinition($rClass->getName());
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+            return;
+        }
+        
+        $definition = $container->getDefinition($reflectionClass->getName());
 
         $arguments = [
             ...$definition->getArguments(),
@@ -73,8 +78,8 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
         $file = $attribute->file ?? $definition->getFile();
 
         $isShared = $attribute->isShared ?? $definition->isShared();
-        $isLazy = $attribute->isLazy ? !$rClass->isFinal() : $attribute->isLazy;
-        $isAbstract = $attribute->isAbstract ? $rClass->isAbstract() : $attribute->isAbstract;
+        $isLazy = $attribute->isLazy ? !$reflectionClass->isFinal() : $attribute->isLazy;
+        $isAbstract = $attribute->isAbstract ? $reflectionClass->isAbstract() : $attribute->isAbstract;
         $isPublic = $attribute->isPublic ?? $definition->isPublic();
         $isSynthetic = $attribute->isSynthetic ?? $definition->isSynthetic();
         $isAutowired = $attribute->isAutowired ?? $definition->isAutowired();

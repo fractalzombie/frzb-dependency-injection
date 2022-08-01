@@ -16,6 +16,7 @@ namespace FRZB\Component\DependencyInjection\Compiler;
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Enum\AliasType;
 use FRZB\Component\DependencyInjection\Exception\AttributeException;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -43,21 +44,25 @@ final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
         }
     }
 
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsAlias $attribute): void
     {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $attribute->service)) {
+            return;
+        }
+        
         try {
             $definitionClass = $container->getReflectionClass($attribute->service);
         } catch (\ReflectionException $e) {
             throw AttributeException::noDefinitionInContainer($attribute, $e);
         }
 
-        if ($rClass->isInterface() && !$definitionClass?->isSubclassOf($rClass->getName())) {
-            throw AttributeException::invalidImplementation($attribute, $rClass);
+        if ($reflectionClass->isInterface() && !$definitionClass?->isSubclassOf($reflectionClass->getName())) {
+            throw AttributeException::invalidImplementation($attribute, $reflectionClass);
         }
 
         match ($attribute->aliasType) {
-            AliasType::WithArgumentName => $this->registerAliasWithArgument($container, $rClass, $attribute),
-            AliasType::WithoutArgumentName => $this->registerAliasWithoutArgument($container, $rClass, $attribute),
+            AliasType::WithArgumentName => $this->registerAliasWithArgument($container, $reflectionClass, $attribute),
+            AliasType::WithoutArgumentName => $this->registerAliasWithoutArgument($container, $reflectionClass, $attribute),
             AliasType::LogicException => throw AttributeException::unexpected($attribute),
         };
     }

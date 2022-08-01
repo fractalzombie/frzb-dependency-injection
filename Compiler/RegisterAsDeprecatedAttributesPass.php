@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -31,9 +32,13 @@ final class RegisterAsDeprecatedAttributesPass extends AbstractRegisterAttribute
         parent::__construct(AsDeprecated::class);
     }
 
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsDeprecated $attribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsDeprecated $attribute): void
     {
-        $container->getDefinition($rClass->getName())
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+            return;
+        }
+        
+        $container->getDefinition($reflectionClass->getName())
             ->setDeprecated($attribute->package, $attribute->version, $attribute->message)
         ;
     }
