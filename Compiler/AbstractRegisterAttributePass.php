@@ -18,6 +18,7 @@ use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use TokenService\Core\Domain\Common\Service\Notification\SlackNotifier;
 
 /**
  * @internal
@@ -26,7 +27,7 @@ use Symfony\Component\DependencyInjection\Definition;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  *
- * @method register(ContainerBuilder $container, \ReflectionClass $rClass, \Attribute $attribute): void
+ * @method register(ContainerBuilder $container, \ReflectionClass $reflectionClass, \Attribute $attribute): void
  */
 abstract class AbstractRegisterAttributePass implements CompilerPassInterface
 {
@@ -49,10 +50,6 @@ abstract class AbstractRegisterAttributePass implements CompilerPassInterface
 
     protected function processClass(ContainerBuilder $container, \ReflectionClass $reflectionClass): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
-            return;
-        }
-
         ArrayList::collect($reflectionClass->getAttributes($this->attributeClass, \ReflectionAttribute::IS_INSTANCEOF))
             ->tap(fn (\ReflectionAttribute $attribute) => $this->register($container, $reflectionClass, $attribute->newInstance()))
         ;

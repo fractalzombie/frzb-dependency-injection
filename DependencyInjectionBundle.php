@@ -21,7 +21,7 @@ use FRZB\Component\DependencyInjection\Compiler\RegisterAsTaggedAttributesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class DependencyInjectionBundle extends Bundle
+final class DependencyInjectionBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {

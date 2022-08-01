@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsDecorator;
+use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -31,9 +32,13 @@ final class RegisterAsDecoratorAttributesPass extends AbstractRegisterAttributeP
         parent::__construct(AsDecorator::class);
     }
 
-    public function register(ContainerBuilder $container, \ReflectionClass $rClass, AsDecorator $attribute): void
+    public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsDecorator $attribute): void
     {
-        $container->getDefinition($rClass->getName())
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+            return;
+        }
+        
+        $container->getDefinition($reflectionClass->getName())
             ->setDecoratedService($attribute->decorates, $attribute->innerName, $attribute->priority, $attribute->onInvalid->value)
         ;
     }
