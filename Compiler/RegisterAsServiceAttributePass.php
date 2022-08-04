@@ -34,17 +34,12 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
         parent::__construct(AsService::class);
     }
 
-    protected function accept(Definition $definition): bool
-    {
-        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
-    }
-
     protected function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsService $attribute): void
     {
         if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
             return;
         }
-        
+
         $definition = $container->getDefinition($reflectionClass->getName());
 
         $arguments = [

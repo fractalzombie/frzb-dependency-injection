@@ -16,6 +16,7 @@ namespace FRZB\Component\DependencyInjection;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsDecoratorAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsDeprecatedAttributesPass;
+use FRZB\Component\DependencyInjection\Compiler\RegisterAsIgnoredAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsServiceAttributePass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsTaggedAttributesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,6 +30,7 @@ final class DependencyInjectionBundle extends Bundle
             ->addCompilerPass(new RegisterAsAliasAttributesPass())
             ->addCompilerPass(new RegisterAsServiceAttributePass())
             ->addCompilerPass(new RegisterAsTaggedAttributesPass())
+            ->addCompilerPass(new RegisterAsIgnoredAttributesPass())
             ->addCompilerPass(new RegisterAsDecoratorAttributesPass())
             ->addCompilerPass(new RegisterAsDeprecatedAttributesPass())
         ;

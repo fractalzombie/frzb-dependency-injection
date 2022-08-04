@@ -37,14 +37,9 @@ final class RegisterAsDeprecatedAttributesPass extends AbstractRegisterAttribute
         if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
             return;
         }
-        
+
         $container->getDefinition($reflectionClass->getName())
             ->setDeprecated($attribute->package, $attribute->version, $attribute->message)
         ;
-    }
-
-    protected function accept(Definition $definition): bool
-    {
-        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
     }
 }

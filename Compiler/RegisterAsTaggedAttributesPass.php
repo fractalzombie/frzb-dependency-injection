@@ -43,9 +43,4 @@ final class RegisterAsTaggedAttributesPass extends AbstractRegisterAttributePass
             ->addTag($attribute->name, TagHelper::toTag($attribute))
         ;
     }
-
-    protected function accept(Definition $definition): bool
-    {
-        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
-    }
 }

@@ -18,7 +18,6 @@ use FRZB\Component\DependencyInjection\Enum\AliasType;
 use FRZB\Component\DependencyInjection\Exception\AttributeException;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
@@ -49,7 +48,7 @@ final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
         if (!EnvironmentHelper::isPermittedEnvironment($container, $attribute->service)) {
             return;
         }
-        
+
         try {
             $definitionClass = $container->getReflectionClass($attribute->service);
         } catch (\ReflectionException $e) {
@@ -65,11 +64,6 @@ final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
             AliasType::WithoutArgumentName => $this->registerAliasWithoutArgument($container, $reflectionClass, $attribute),
             AliasType::LogicException => throw AttributeException::unexpected($attribute),
         };
-    }
-
-    protected function accept(Definition $definition): bool
-    {
-        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
     }
 
     private function registerAliasWithArgument(ContainerBuilder $container, \ReflectionClass $rClass, AsAlias $attribute): void

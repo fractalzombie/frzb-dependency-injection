@@ -14,11 +14,9 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use Fp\Collections\ArrayList;
-use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use TokenService\Core\Domain\Common\Service\Notification\SlackNotifier;
 
 /**
  * @internal
@@ -39,6 +37,7 @@ abstract class AbstractRegisterAttributePass implements CompilerPassInterface
         $this->attributeClass = $attributeClass;
     }
 
+    /** @throws \ReflectionException */
     public function process(ContainerBuilder $container): void
     {
         foreach ($container->getDefinitions() as $definition) {
@@ -55,7 +54,10 @@ abstract class AbstractRegisterAttributePass implements CompilerPassInterface
         ;
     }
 
-    abstract protected function accept(Definition $definition): bool;
+    protected function accept(Definition $definition): bool
+    {
+        return $definition->isAutoconfigured() && $this->isAttributesIgnored($definition);
+    }
 
     protected function isAttributesIgnored(Definition $definition): bool
     {
