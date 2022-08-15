@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eed2640d4194f0b537e674f054b7d1a4",
+    "content-hash": "b129a3acb01f4e0ff348cbb208118407",
     "packages": [
         {
             "name": "fp4php/functional",

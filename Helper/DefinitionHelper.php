@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\Reference;
 #[Immutable]
 final class DefinitionHelper
 {
+    private const SERVICE_PREFIX = '@';
+    private const EMPTY_STRING = '';
+
     private function __construct()
     {
     }
@@ -30,8 +33,8 @@ final class DefinitionHelper
     {
         $definitionsById = HashMap::collect($arguments)
             ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => str_contains($e->value, '@'))
-            ->map(static fn (Entry $e) => str_replace('@', '', $e->value))
+            ->filter(static fn (Entry $e) => str_contains($e->value, self::SERVICE_PREFIX))
+            ->map(static fn (Entry $e) => str_replace(self::SERVICE_PREFIX, self::EMPTY_STRING, $e->value))
             ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
             ->map(static fn (Entry $e) => new Reference((string) $e->value))
             ->toAssocArray()

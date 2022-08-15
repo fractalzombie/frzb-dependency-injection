@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\Definition;
  *
  * @author Mykhailo Shtanko <fractalzombie@gmail.com>
  *
- * @method register(ContainerBuilder $container, \ReflectionClass $reflectionClass, \Attribute $attribute): void
+ * @method void register(ContainerBuilder $container, \ReflectionClass $reflectionClass, \Attribute $attribute)
  */
 abstract class AbstractRegisterAttributePass implements CompilerPassInterface
 {
