@@ -8,7 +8,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 
 /** @internal */
 #[AsService]
-final class Service implements ServiceInterface
+class Service implements ServiceInterface
 {
     private AnotherServiceInterface $anotherService;
 

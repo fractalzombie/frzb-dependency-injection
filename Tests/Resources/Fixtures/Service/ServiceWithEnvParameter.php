@@ -8,7 +8,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
 
 /** @internal */
 #[AsService(arguments: ['$environment' => '%env(TEST_ENVIRONMENT)%'])]
-final class ServiceWithEnvParameter implements ServiceInterface
+ class ServiceWithEnvParameter implements ServiceInterface
 {
     private string $environment;
 

@@ -24,8 +24,10 @@ use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\TaggedSe
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\TaggedServiceInterface;
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\ContainerTestCase;
 use FRZB\Component\DependencyInjection\Tests\Util\Helper\TestConstant;
+use PHPUnit\Framework\Attributes\Group;
 
 /** @internal */
+#[Group('dependency-injection')]
 final class RegisterAttributePassTest extends ContainerTestCase
 {
     protected function setUp(): void

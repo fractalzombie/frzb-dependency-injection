@@ -10,6 +10,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /** @internal */
 #[When('dev')]
 #[AsService]
-final class ServiceWithWhenAttribute implements ServiceInterface
+ class ServiceWithWhenAttribute implements ServiceInterface
 {
 }

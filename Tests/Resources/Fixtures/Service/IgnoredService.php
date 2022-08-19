@@ -8,6 +8,6 @@ use FRZB\Component\DependencyInjection\Attribute\AsIgnored;
 
 /** @internal */
 #[AsIgnored]
-final class IgnoredService implements IgnoredServiceInterface
+ class IgnoredService implements IgnoredServiceInterface
 {
 }

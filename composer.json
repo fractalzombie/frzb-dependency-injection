@@ -21,21 +21,15 @@
     "require": {
         "php": "^8.1",
         "fp4php/functional": "^4.18",
-        "psr/container": "^1.1|^2.0",
         "symfony/dependency-injection": "^5.4|^6",
-        "symfony/deprecation-contracts": "^2.4",
-        "symfony/http-kernel": "^5.4|^6",
-        "symfony/service-contracts": "^1.1.6|^2|^3"
+        "symfony/http-kernel": "^5.4|^6"
     },
     "require-dev": {
         "symfony/config": "^5.4|^6",
-        "phpunit/php-code-coverage": "^9.2",
-        "symfony/expression-language": "^5.4|^6",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/php-code-coverage": "^10.0",
+        "phpunit/phpunit": "^10.0",
         "symfony/phpunit-bridge": "^5.4|^6",
-        "friendsofphp/php-cs-fixer": "^v3.3",
-        "sempro/phpunit-pretty-print": "^1.4",
-        "dg/bypass-finals": "^v1.3"
+        "friendsofphp/php-cs-fixer": "^v3.3"
     },
     "autoload": {
         "psr-4": {
@@ -45,5 +39,6 @@
             "/Tests/"
         ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
