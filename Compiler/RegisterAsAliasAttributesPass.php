@@ -16,6 +16,7 @@ namespace FRZB\Component\DependencyInjection\Compiler;
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Enum\AliasType;
 use FRZB\Component\DependencyInjection\Exception\AttributeException;
+use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -45,12 +46,12 @@ final class RegisterAsAliasAttributesPass extends AbstractRegisterAttributePass
 
     public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsAlias $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $attribute->service)) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 
         try {
-            $definitionClass = $container->getReflectionClass($attribute->service);
+            $definitionClass = DefinitionHelper::getReflectionClassForServiceId($container, $attribute->service);
         } catch (\ReflectionException $e) {
             throw AttributeException::noDefinitionInContainer($attribute, $e);
         }

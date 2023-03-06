@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Compiler;
 
 use FRZB\Component\DependencyInjection\Attribute\AsTagged;
+use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use FRZB\Component\DependencyInjection\Helper\TagHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -35,11 +36,12 @@ final class RegisterAsTaggedAttributesPass extends AbstractRegisterAttributePass
 
     public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsTagged $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 
-        $container->getDefinition($reflectionClass->getName())
+        $container
+            ->getDefinition(DefinitionHelper::getServiceId($container, $reflectionClass, $attribute->id))
             ->addTag($attribute->name, TagHelper::toTag($attribute))
         ;
     }

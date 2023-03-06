@@ -10,6 +10,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /** @internal */
 #[When('test')]
 #[AsService]
- class ServiceWithCorrectWhenAttribute implements ServiceInterface
+class ServiceWithCorrectWhenAttribute implements ServiceInterface
 {
 }

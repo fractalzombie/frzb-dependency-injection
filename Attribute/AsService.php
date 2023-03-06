@@ -20,7 +20,7 @@ use FRZB\Component\DependencyInjection\Exception\AttributeException;
 use JetBrains\PhpStorm\Immutable;
 
 #[Immutable]
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class AsService
 {
     private const PARAMETER_PREFIX = '$';
@@ -33,6 +33,7 @@ final class AsService
         public readonly bool $isLazy = true,
         public readonly bool $isPublic = true,
         public readonly bool $isAbstract = false,
+        public readonly ?string $id = null,
         public readonly string|array|null $factory = null,
         public readonly ?string $file = null,
         array $arguments = [],

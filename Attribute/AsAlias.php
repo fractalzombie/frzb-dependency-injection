@@ -33,4 +33,12 @@ final class AsAlias
             default => AliasType::LogicException,
         };
     }
+
+    public function getServiceAlias(): string
+    {
+        return match ($this->aliasType) {
+            AliasType::WithArgumentName => sprintf('%s %s', $this->service, $this->aliasForArgument),
+            AliasType::WithoutArgumentName, AliasType::LogicException => $this->service,
+        };
+    }
 }

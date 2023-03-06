@@ -34,7 +34,7 @@ final class RegisterAsDecoratorAttributesPass extends AbstractRegisterAttributeP
 
     public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsDecorator $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 

@@ -12,6 +12,7 @@ final class AsTagged
 {
     public function __construct(
         public readonly string $name,
+        public readonly ?string $id = null,
         public readonly ?string $alias = null,
         public readonly ?string $key = null,
         public readonly ?int $priority = null,

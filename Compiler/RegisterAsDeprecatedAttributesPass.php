@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Compiler;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsDeprecated;
+use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -34,12 +37,15 @@ final class RegisterAsDeprecatedAttributesPass extends AbstractRegisterAttribute
 
     public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsDeprecated $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 
-        $container->getDefinition($reflectionClass->getName())
-            ->setDeprecated($attribute->package, $attribute->version, $attribute->message)
+        ArrayList::collect($reflectionClass->getAttributes(AsService::class, \ReflectionAttribute::IS_INSTANCEOF))
+            ->map(static fn (\ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance())
+            ->map(static fn (AsService $asService) => $container->getDefinition(DefinitionHelper::getServiceId($container, $reflectionClass, $asService->id)))
+            ->appended($container->getDefinition($reflectionClass->getName()))
+            ->tap(static fn (Definition $definition) => $definition->setDeprecated($attribute->package, $attribute->version, $attribute->message))
         ;
     }
 }

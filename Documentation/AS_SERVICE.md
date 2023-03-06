@@ -54,7 +54,7 @@ services:
 ```
 
 And then annotate service with attribute `#[AsService]` and it will be work as if you
-configure it in the yaml file.
+configure it in the yaml file:
 
 ```php
 namespace App\Http\Service;
@@ -66,6 +66,30 @@ use FRZB\Component\DependencyInjection\Attribute\AsService;
       '$port' => '%env(HTTP_CLIENT_PORT)%',
       '$timeout' => '%env(HTTP_CLIENT_TIMEOUT)%',
 ])]
+class HttpClient {
+    public function __construct(
+        private string $host,
+        private int $port,
+        private int $timeout,
+    ) {}
+}
+```
+
+Or if you want do define id for service:
+
+```php
+namespace App\Http\Service;
+
+use FRZB\Component\DependencyInjection\Attribute\AsService;
+
+#[AsService(
+    id: 'app.http.service',
+    arguments: [
+      '$host' => '%env(HTTP_CLIENT_HOST)%',
+      '$port' => '%env(HTTP_CLIENT_PORT)%',
+      '$timeout' => '%env(HTTP_CLIENT_TIMEOUT)%',
+    ]
+)]
 class HttpClient {
     public function __construct(
         private string $host,

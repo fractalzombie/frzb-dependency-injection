@@ -17,15 +17,9 @@ final class EnvironmentHelper
     {
     }
 
-    public static function isPermittedEnvironment(ContainerBuilder $container, string $serviceClass): bool
+    public static function isPermittedEnvironment(ContainerBuilder $container, \ReflectionClass $reflectionClass): bool
     {
-        try {
-            $reflectionClass = new \ReflectionClass($serviceClass);
-            $currentEnvironment = $container->getParameter('kernel.environment');
-        } catch (\ReflectionException) {
-            return false;
-        }
-
+        $currentEnvironment = $container->getParameter('kernel.environment');
         $permittedEnvironments = ArrayList::collect($reflectionClass->getAttributes(When::class))
             ->map(static fn (\ReflectionAttribute $attribute) => $attribute->newInstance()->env)
         ;

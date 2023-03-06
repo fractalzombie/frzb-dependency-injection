@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Compiler;
 
+use Fp\Collections\ArrayList;
 use FRZB\Component\DependencyInjection\Attribute\AsAlias;
 use FRZB\Component\DependencyInjection\Attribute\AsIgnored;
+use FRZB\Component\DependencyInjection\Attribute\AsService;
+use FRZB\Component\DependencyInjection\Helper\DefinitionHelper;
 use FRZB\Component\DependencyInjection\Helper\EnvironmentHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -35,15 +38,23 @@ final class RegisterAsIgnoredAttributesPass extends AbstractRegisterAttributePas
 
     public function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsIgnored $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 
-        match (true) {
-            $container->hasDefinition($reflectionClass->getName()) => $container->removeDefinition($reflectionClass->getName()),
-            $container->hasAlias($reflectionClass->getName()) => $container->removeAlias($reflectionClass->getName()),
-            default => null,
-        };
+        ArrayList::collect(DefinitionHelper::getAttributesFor($reflectionClass, AsService::class))
+            ->map(static fn (\ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance())
+            ->filter(static fn (AsService $asService) => $container->hasDefinition(DefinitionHelper::getServiceId($container, $reflectionClass, $asService->id)))
+            ->map(static fn (AsService $asService) => DefinitionHelper::getServiceId($container, $reflectionClass, $asService->id))
+            ->tap(static fn (string $serviceId) => $container->removeDefinition($serviceId))
+        ;
+
+        ArrayList::collect(DefinitionHelper::getAttributesFor($reflectionClass, AsAlias::class))
+            ->map(static fn (\ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance())
+            ->filter(static fn (AsAlias $asAlias) => $container->hasAlias(DefinitionHelper::getServiceId($container, $reflectionClass, $asAlias->getServiceAlias())))
+            ->map(static fn (AsAlias $asAlias) => DefinitionHelper::getServiceId($container, $reflectionClass, $asAlias->service))
+            ->tap(static fn (string $serviceId) => $container->removeAlias($serviceId))
+        ;
     }
 
     protected function accept(Definition $definition): bool

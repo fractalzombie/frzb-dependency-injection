@@ -10,6 +10,6 @@ use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 /** @internal */
 #[AsService]
 #[AsTagged(TaggedServiceInterface::class)]
- class TaggedService implements TaggedServiceInterface
+class TaggedService implements TaggedServiceInterface
 {
 }

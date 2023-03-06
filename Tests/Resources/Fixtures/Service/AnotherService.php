@@ -9,7 +9,7 @@ use FRZB\Component\DependencyInjection\Attribute\AsTagged;
 
 /** @internal */
 #[AsService(tags: [new AsTagged(AnotherServiceInterface::class)])]
- class AnotherService implements AnotherServiceInterface
+class AnotherService implements AnotherServiceInterface
 {
     public const SOMETHING_VALUE = 'something';
 

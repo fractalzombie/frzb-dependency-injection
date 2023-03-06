@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FRZB\Component\DependencyInjection\Helper;
 
+use Fp\Collections\ArrayList;
 use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use JetBrains\PhpStorm\Immutable;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Reference;
 
 /** @internal */
@@ -19,6 +22,49 @@ final class DefinitionHelper
 
     private function __construct()
     {
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $attributeName
+     *
+     * @return T[]
+     */
+    public static function getAttributesFor(\ReflectionClass $reflectionClass, string $attributeName): array
+    {
+        return ArrayList::collect($reflectionClass->getAttributes($attributeName, \ReflectionAttribute::IS_INSTANCEOF))
+            ->map(static fn (\ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance())
+            ->toArray()
+        ;
+    }
+
+    public static function getServiceId(ContainerBuilder $container, \ReflectionClass $reflectionClass, ?string $serviceId): string
+    {
+        return match (true) {
+            null !== $serviceId && $container->hasDefinition($serviceId) => $serviceId,
+            null === $serviceId && $container->hasDefinition($reflectionClass->getName()) => $reflectionClass->getName(),
+            default => throw new ServiceNotFoundException($attribute->id ?? $reflectionClass->getName()),
+        };
+    }
+
+    public static function getClassForServiceId(ContainerBuilder $container, string $serviceId): string
+    {
+        return class_exists($serviceId)
+            ? $serviceId
+            : $container->getDefinition($serviceId)->getClass()
+        ;
+    }
+
+    /** @throws \ReflectionException */
+    public static function getReflectionClassForServiceId(ContainerBuilder $container, string $serviceId): \ReflectionClass
+    {
+        return $container->getReflectionClass(self::getClassForServiceId($container, $serviceId));
+    }
+
+    public static function getDefinitionForServiceId(ContainerBuilder $container, string $serviceId): Definition
+    {
+        return $container->getDefinition(self::getClassForServiceId($container, $serviceId));
     }
 
     public static function mapDefinitionMethodCalls(ContainerBuilder $container, array $methodCalls): array

@@ -36,11 +36,14 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
 
     protected function register(ContainerBuilder $container, \ReflectionClass $reflectionClass, AsService $attribute): void
     {
-        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass->getName())) {
+        if (!EnvironmentHelper::isPermittedEnvironment($container, $reflectionClass)) {
             return;
         }
 
-        $definition = $container->getDefinition($reflectionClass->getName());
+        $definition = ($container->hasDefinition($id = $attribute->id ?? $reflectionClass->getName()))
+            ? $container->getDefinition($id)->setClass($reflectionClass->getName())
+            : $container->setDefinition($id, new Definition())->setClass($reflectionClass->getName())
+        ;
 
         $arguments = [
             ...$definition->getArguments(),

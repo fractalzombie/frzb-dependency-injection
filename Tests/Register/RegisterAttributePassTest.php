@@ -15,6 +15,8 @@ use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\Decorate
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DeprecatedService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\IgnoredService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\IgnoredServiceInterface;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\NamedService;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\NamedServiceInterface;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\Service;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceInterface;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\ServiceWithCorrectWhenAttribute;
@@ -28,6 +30,9 @@ use PHPUnit\Framework\Attributes\Group;
 
 /** @internal */
 #[Group('dependency-injection')]
+/**
+ * @internal
+ */
 final class RegisterAttributePassTest extends ContainerTestCase
 {
     protected function setUp(): void
@@ -57,12 +62,40 @@ final class RegisterAttributePassTest extends ContainerTestCase
 
         $this->compileContainer();
 
-        self::assertSame(Service::class, $this->get(ServiceInterface::class)::class);
-        self::assertSame(AnotherService::class, $this->get(AnotherServiceInterface::class)::class);
-        self::assertSame(ServiceWithEnvParameter::class, $this->get(TestConstant::TEST_SERVICE_WITH_ARGUMENT_FULL_NAME)::class);
+        self::assertInstanceOf(Service::class, $this->get(ServiceInterface::class));
+        self::assertInstanceOf(AnotherService::class, $this->get(AnotherServiceInterface::class));
+        self::assertInstanceOf(ServiceWithEnvParameter::class, $this->get(TestConstant::TEST_SERVICE_WITH_ARGUMENT_FULL_NAME));
         self::assertFalse($this->hasDefinition(ServiceWithWhenAttribute::class));
         self::assertTrue($this->hasDefinition(ServiceWithCorrectWhenAttribute::class));
         self::assertNotEmpty($this->getTags(AnotherServiceInterface::class));
+    }
+
+    public function testNamedServicesWithAliasRegistrationInContainer(): void
+    {
+        $this->addCompilerPasses(
+            new RegisterAsServiceAttributePass(),
+            new RegisterAsTaggedAttributesPass(),
+            new RegisterAsAliasAttributesPass(),
+        );
+
+        $this->compileContainer();
+
+        $firstNamedServiceAlias = $this->get('FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\NamedServiceInterface $first');
+        $secondNamedServiceAlias = $this->get('FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\NamedServiceInterface $second');
+        $firstNamedService = $this->get('named_service.first');
+        $secondNamedService = $this->get('named_service.second');
+
+        self::assertInstanceOf(NamedService::class, $firstNamedServiceAlias);
+        self::assertInstanceOf(NamedService::class, $secondNamedServiceAlias);
+        self::assertInstanceOf(NamedService::class, $secondNamedService);
+        self::assertInstanceOf(NamedService::class, $secondNamedService);
+        self::assertSame('first', $firstNamedServiceAlias->getType());
+        self::assertSame('second', $secondNamedServiceAlias->getType());
+        self::assertSame('first', $firstNamedService->getType());
+        self::assertSame('second', $secondNamedService->getType());
+        self::assertTrue($this->hasDefinition('named_service.first'));
+        self::assertTrue($this->hasDefinition('named_service.second'));
+        self::assertNotEmpty($this->getTags(NamedServiceInterface::class));
     }
 
     public function testDeprecatedRegistrationInContainer(): void

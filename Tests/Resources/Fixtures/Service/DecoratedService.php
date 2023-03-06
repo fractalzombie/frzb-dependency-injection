@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 /** @internal */
 #[AsService]
 #[AsDecorator(decorates: Service::class, innerName: '@.inner')]
- class DecoratedService
+class DecoratedService
 {
     private Service $service;
 
