@@ -45,60 +45,40 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
             : $container->setDefinition($id, new Definition())->setClass($reflectionClass->getName())
         ;
 
-        $arguments = [
-            ...$definition->getArguments(),
-            ...$attribute->arguments,
-            ...DefinitionHelper::mapDefinitionArguments($container, $attribute->arguments),
+        foreach (self::mapArguments($container, $definition, $reflectionClass, $attribute) as $method => $arguments) {
+            $definition->{$method}($arguments);
+        }
+    }
+
+    private static function mapArguments(
+        ContainerBuilder $container,
+        Definition $definition,
+        \ReflectionClass $reflectionClass,
+        AsService $attribute
+    ): array {
+        return [
+            'setFile' => $attribute->file ?? $definition->getFile(),
+            'setShared' => $attribute->isShared ?? $definition->isShared(),
+            'setPublic' => $attribute->isPublic ?? $definition->isPublic(),
+            'setFactory' => $attribute->factory ?? $definition->getFactory(),
+            'setAutowired' => $attribute->isAutowired ?? $definition->isAutowired(),
+            'setSynthetic' => $attribute->isSynthetic ?? $definition->isSynthetic(),
+            'setBindings' => [...$definition->getBindings(), ...$attribute->bindings],
+            'setConfigurator' => $attribute->configurator ?? $definition->getConfigurator(),
+            'setProperties' => [...$definition->getProperties(), ...$attribute->properties],
+            'setLazy' => $attribute->isLazy ? !$reflectionClass->isFinal() : $attribute->isLazy,
+            'setTags' => [...$definition->getTags(), ...TagHelper::mapTags(...$attribute->tags)],
+            'setAutoconfigured' => $attribute->isAutoconfigured ?? $definition->isAutoconfigured(),
+            'setAbstract' => $attribute->isAbstract ? $reflectionClass->isAbstract() : $attribute->isAbstract,
+            'setArguments' => [
+                ...$definition->getArguments(),
+                ...$attribute->arguments,
+                ...DefinitionHelper::mapDefinitionArguments($container, $attribute->arguments),
+            ],
+            'setMethodCalls' => [
+                ...$definition->getMethodCalls(),
+                ...DefinitionHelper::mapDefinitionMethodCalls($container, $attribute->calls),
+            ],
         ];
-
-        $methodCalls = [
-            ...$definition->getMethodCalls(),
-            ...DefinitionHelper::mapDefinitionMethodCalls($container, $attribute->calls),
-        ];
-
-        $properties = [
-            ...$definition->getProperties(),
-            ...$attribute->properties,
-        ];
-
-        $bindings = [
-            ...$definition->getBindings(),
-            ...$attribute->bindings,
-        ];
-
-        $tags = [
-            ...$definition->getTags(),
-            ...TagHelper::mapTags(...$attribute->tags),
-        ];
-
-        $factory = $attribute->factory ?? $definition->getFactory();
-        $configurator = $attribute->configurator ?? $definition->getConfigurator();
-        $file = $attribute->file ?? $definition->getFile();
-
-        $isShared = $attribute->isShared ?? $definition->isShared();
-        $isLazy = $attribute->isLazy ? !$reflectionClass->isFinal() : $attribute->isLazy;
-        $isAbstract = $attribute->isAbstract ? $reflectionClass->isAbstract() : $attribute->isAbstract;
-        $isPublic = $attribute->isPublic ?? $definition->isPublic();
-        $isSynthetic = $attribute->isSynthetic ?? $definition->isSynthetic();
-        $isAutowired = $attribute->isAutowired ?? $definition->isAutowired();
-        $isAutoconfigured = $attribute->isAutoconfigured ?? $definition->isAutoconfigured();
-
-        $definition
-            ->setFactory($factory)
-            ->setFile($file)
-            ->setArguments($arguments)
-            ->setProperties($properties)
-            ->setConfigurator($configurator)
-            ->setMethodCalls($methodCalls)
-            ->setTags($tags)
-            ->setBindings($bindings)
-            ->setShared($isShared)
-            ->setSynthetic($isSynthetic)
-            ->setLazy($isLazy)
-            ->setPublic($isPublic)
-            ->setAbstract($isAbstract)
-            ->setAutowired($isAutowired)
-            ->setAutoconfigured($isAutoconfigured)
-        ;
     }
 }
