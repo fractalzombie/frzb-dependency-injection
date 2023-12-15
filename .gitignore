@@ -37,3 +37,7 @@ Makefile
 **/phpunit.xml
 **/.phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> git ###
+composer.lock
+###< git ###
