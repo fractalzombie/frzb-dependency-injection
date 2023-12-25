@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-/*
- * This is package for Symfony framework.
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *
- * (c) Mykhailo Shtanko <fractalzombie@gmail.com>
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
  *
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE.MD
  * file that was distributed with this source code.
  */
 
 namespace FRZB\Component\DependencyInjection\Helper;
 
 use Fp\Collections\ArrayList;
-use Fp\Collections\Entry;
 use Fp\Collections\HashMap;
 use JetBrains\PhpStorm\Immutable;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,9 +30,7 @@ final class DefinitionHelper
     private const SERVICE_PREFIX = '@';
     private const EMPTY_STRING = '';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @template T
@@ -61,8 +60,7 @@ final class DefinitionHelper
     {
         return class_exists($serviceId)
             ? $serviceId
-            : $container->getDefinition($serviceId)->getClass()
-        ;
+            : $container->getDefinition($serviceId)->getClass();
     }
 
     /** @throws \ReflectionException */
@@ -79,7 +77,7 @@ final class DefinitionHelper
     public static function mapDefinitionMethodCalls(ContainerBuilder $container, array $methodCalls): array
     {
         return HashMap::collect($methodCalls)
-            ->map(fn (Entry $e) => self::mapDefinitionArguments($container, $e->value))
+            ->map(fn (array $value) => self::mapDefinitionArguments($container, $value))
             ->toArray()
         ;
     }
@@ -87,31 +85,28 @@ final class DefinitionHelper
     public static function mapDefinitionArguments(ContainerBuilder $container, array $arguments): array
     {
         $definitionsById = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => str_contains($e->value, self::SERVICE_PREFIX))
-            ->map(static fn (Entry $e) => str_replace(self::SERVICE_PREFIX, self::EMPTY_STRING, $e->value))
-            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
+            ->filter(static fn (string $value) => \is_string($value))
+            ->filter(static fn (string $value) => str_contains($value, self::SERVICE_PREFIX))
+            ->map(static fn (string $value) => str_replace(self::SERVICE_PREFIX, self::EMPTY_STRING, $value))
+            ->filter(static fn (string $value) => $container->hasDefinition($value))
+            ->map(static fn (string $value) => new Reference($value))
+            ->toArray()
         ;
 
         $definitionsByClass = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => class_exists($e->value))
-            ->filter(static fn (Entry $e) => $container->hasDefinition($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
+            ->filter(static fn (string $value) => \is_string($value))
+            ->filter(static fn (string $value) => class_exists($value))
+            ->filter(static fn (string $value) => $container->hasDefinition($value))
+            ->map(static fn (string $value) => new Reference($value))
+            ->toArray()
         ;
 
         $definitionsByAlias = HashMap::collect($arguments)
-            ->filter(static fn (Entry $e) => \is_string($e->value))
-            ->filter(static fn (Entry $e) => interface_exists($e->value) || class_exists($e->value))
-            ->filter(static fn (Entry $e) => $container->hasAlias($e->value))
-            ->map(static fn (Entry $e) => new Reference((string) $e->value))
-            ->toAssocArray()
-            ->getOrElse([])
+            ->filter(static fn (string $value) => \is_string($value))
+            ->filter(static fn (string $value) => interface_exists($value) || class_exists($value))
+            ->filter(static fn (string $value) => $container->hasAlias($value))
+            ->map(static fn (string $value) => new Reference($value))
+            ->toArray()
         ;
 
         return [...$definitionsById, ...$definitionsByClass, ...$definitionsByAlias];

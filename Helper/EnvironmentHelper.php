@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * This is package for Symfony framework.
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *
- * (c) Mykhailo Shtanko <fractalzombie@gmail.com>
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
  *
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE.MD
  * file that was distributed with this source code.
  */
 
@@ -22,9 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 #[Immutable]
 final class EnvironmentHelper
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function isPermittedEnvironment(ContainerBuilder $container, \ReflectionClass $reflectionClass): bool
     {
@@ -36,7 +36,7 @@ final class EnvironmentHelper
         $isEnvironmentIsNotDefined = $permittedEnvironments->isEmpty();
         $isEnvironmentPermitted = $permittedEnvironments
             ->first(static fn (string $environment) => $environment === $currentEnvironment)
-            ->isNonEmpty()
+            ->isSome()
         ;
 
         return $isEnvironmentPermitted || $isEnvironmentIsNotDefined;
