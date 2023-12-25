@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * This is package for Symfony framework.
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *
- * (c) Mykhailo Shtanko <fractalzombie@gmail.com>
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
  *
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE.MD
  * file that was distributed with this source code.
  */
 
@@ -20,9 +22,7 @@ use JetBrains\PhpStorm\Immutable;
 #[Immutable]
 final class PropertyHelper
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function mapProperties(object $target, array $excludeNames = [], bool $excludeEmpty = true): array
     {
@@ -43,8 +43,7 @@ final class PropertyHelper
                 \is_array($property->getValue($target)) => $property->getValue($target),
                 default => [$property->getName() => $property->getValue($target)],
             })
-            ->reduce(array_merge(...))
-            ->getOrElse([])
+            ->toMergedArray()
         ;
     }
 }

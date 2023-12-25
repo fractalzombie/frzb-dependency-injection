@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * This is package for Symfony framework.
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *
- * (c) Mykhailo Shtanko <fractalzombie@gmail.com>
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
  *
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE.MD
  * file that was distributed with this source code.
  */
 
@@ -42,8 +44,7 @@ final class RegisterAsServiceAttributePass extends AbstractRegisterAttributePass
 
         $definition = ($container->hasDefinition($id = $attribute->id ?? $reflectionClass->getName()))
             ? $container->getDefinition($id)->setClass($reflectionClass->getName())
-            : $container->setDefinition($id, new Definition())->setClass($reflectionClass->getName())
-        ;
+            : $container->setDefinition($id, new Definition())->setClass($reflectionClass->getName());
 
         foreach (self::mapArguments($container, $definition, $reflectionClass, $attribute) as $method => $arguments) {
             $definition->{$method}($arguments);

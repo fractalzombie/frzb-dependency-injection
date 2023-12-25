@@ -1,33 +1,50 @@
 <?php
 
+/** @noinspection DuplicatedCode */
+
 declare(strict_types=1);
 
-$header = <<<EOF
-This is package for Symfony framework.
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *
+ * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE.MD
+ * file that was distributed with this source code.
+ */
+$owner = 'Mykhailo Shtanko';
+$email = 'fractalzombie@gmail.com';
+$year = date('Y');
+$projectDirectory = __DIR__;
 
-(c) Mykhailo Shtanko <fractalzombie@gmail.com>
+$header = <<<'EOF'
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
-For the full copyright and license information, please view the LICENSE
+Copyright (c) {{YEAR}} {{OWNER}} {{EMAIL}}
+
+For the full copyright and license information, please view the LICENSE.MD
 file that was distributed with this source code.
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
     ->exclude('vendor')
-    ->notPath('#Enum#')
-    ->in(__DIR__)
+    ->in($projectDirectory)
 ;
 
 $rules = [
-    'header_comment' => ['header' => $header],
     '@PSR2' => true,
     '@PSR12' => true,
     '@Symfony' => true,
     '@Symfony:risky' => true,
     '@PhpCsFixer' => true,
     '@PHP80Migration' => true,
-    '@PHP80Migration:risky' => true,
     '@PHP81Migration' => true,
+    '@PHP80Migration:risky' => true,
     '@PHPUnit84Migration:risky' => true,
     'date_time_immutable' => true,
     'single_line_throw' => true,
@@ -37,6 +54,16 @@ $rules = [
     'php_unit_test_class_requires_covers' => false,
     'phpdoc_line_span' => ['const' => 'single', 'property' => 'single', 'method' => 'single'],
     'nullable_type_declaration_for_default_null_value' => ['use_nullable_type_declaration' => true],
+    'header_comment' => [
+        'comment_type' => 'PHPDoc',
+        'header' => str_replace(
+            ['{{YEAR}}', '{{OWNER}}', '{{EMAIL}}'],
+            [$year, $owner, $email],
+            $header,
+        ),
+        'location' => 'after_declare_strict',
+        'separate' => 'top',
+    ],
 ];
 
 return (new PhpCsFixer\Config())
