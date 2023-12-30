@@ -1,19 +1,7 @@
 <?php
 
-/** @noinspection DuplicatedCode */
-
 declare(strict_types=1);
 
-/**
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *
- * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
- *
- * For the full copyright and license information, please view the LICENSE.MD
- * file that was distributed with this source code.
- */
 $owner = 'Mykhailo Shtanko';
 $email = 'fractalzombie@gmail.com';
 $year = date('Y');
@@ -33,6 +21,8 @@ EOF;
 $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
     ->exclude('vendor')
+    ->exclude('Documentation')
+    ->ignoreDotFiles(true)
     ->in($projectDirectory)
 ;
 
@@ -43,9 +33,11 @@ $rules = [
     '@Symfony:risky' => true,
     '@PhpCsFixer' => true,
     '@PHP80Migration' => true,
-    '@PHP81Migration' => true,
     '@PHP80Migration:risky' => true,
-    '@PHPUnit84Migration:risky' => true,
+    '@PHP81Migration' => true,
+    '@PHP82Migration' => true,
+    '@PHP83Migration' => true,
+    '@PHPUnit100Migration:risky' => true,
     'date_time_immutable' => true,
     'single_line_throw' => true,
     'php_unit_internal_class' => false,

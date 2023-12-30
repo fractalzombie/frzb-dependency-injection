@@ -24,3 +24,9 @@ Resources
 ---------
 
  * [Documentation](https://github.com/fractalzombie/frzb-dependency-injection/blob/main/Documentation/HOW_TO_USE.md)
+
+
+Contributions
+---------
+
+![Alt](https://repobeats.axiom.co/api/embed/5159ce587b6235c65535c79a961b0529e1662fee.svg "DependencyInjection Component")
