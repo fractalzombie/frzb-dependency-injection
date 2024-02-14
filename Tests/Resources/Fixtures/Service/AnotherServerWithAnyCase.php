@@ -16,9 +16,16 @@ declare(strict_types=1);
 namespace FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service;
 
 use FRZB\Component\DependencyInjection\Attribute\AsService;
-use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @internal */
-#[When('dev')]
-#[AsService]
-class ServiceWithWhenAttribute implements ServiceInterface {}
+#[AsService(arguments: ['another_env' => '%env(TEST_ENVIRONMENT)%'])]
+class AnotherServerWithAnyCase
+{
+    public function __construct(
+        private readonly string $anotherEnv,
+    ) {}
+
+    public function getAnotherEnv(): string
+    {
+        return $this->anotherEnv;
+    }
+}

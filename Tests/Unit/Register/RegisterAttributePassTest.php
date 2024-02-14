@@ -7,19 +7,20 @@ declare(strict_types=1);
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *
- * Copyright (c) 2023 Mykhailo Shtanko fractalzombie@gmail.com
+ * Copyright (c) 2024 Mykhailo Shtanko fractalzombie@gmail.com
  *
  * For the full copyright and license information, please view the LICENSE.MD
  * file that was distributed with this source code.
  */
 
-namespace FRZB\Component\DependencyInjection\Tests\Register;
+namespace FRZB\Component\DependencyInjection\Tests\Unit\Register;
 
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsAliasAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsDeprecatedAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsIgnoredAttributesPass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsServiceAttributePass;
 use FRZB\Component\DependencyInjection\Compiler\RegisterAsTaggedAttributesPass;
+use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherServerWithAnyCase;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherService;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\AnotherServiceInterface;
 use FRZB\Component\DependencyInjection\Tests\Resources\Fixtures\Service\DecoratedService;
@@ -62,6 +63,7 @@ final class RegisterAttributePassTest extends ContainerTestCase
         self::assertTrue($this->hasDefinition(Service::class));
         self::assertTrue($this->hasDefinition(AnotherService::class));
         self::assertSame(TestConstant::TEST_ENVIRONMENT, $this->get(ServiceWithEnvParameter::class)?->getEnvironment());
+        self::assertSame(TestConstant::TEST_ENVIRONMENT, $this->get(AnotherServerWithAnyCase::class)?->getAnotherEnv());
     }
 
     public function testAliasRegistrationInContainer(): void
