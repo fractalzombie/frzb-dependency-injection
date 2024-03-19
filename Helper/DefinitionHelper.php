@@ -78,7 +78,7 @@ final class DefinitionHelper
     {
         return HashMap::collect($methodCalls)
             ->map(fn (array $value) => self::mapDefinitionArguments($container, $value))
-            ->toArray()
+            ->toList()
         ;
     }
 
